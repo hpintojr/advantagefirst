@@ -28,6 +28,7 @@ export default function RootLayout({
 		<link rel="stylesheet" href="/css/blog.css" />
 		<link rel="stylesheet" href="/css/verify.css" />
 		<link rel="stylesheet" href="/css/thankyou.css" />
+		<link rel="stylesheet" href="/css/privacy.css" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>
       <body className={`${lato.className} antialiased main-content flex flex-col min-h-screen`}>
