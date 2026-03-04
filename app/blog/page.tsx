@@ -1,40 +1,108 @@
 import Link from 'next/link';
+import Script from 'next/script';
 
 export default function Blog() {
   return (
-    <div className="w-full flex flex-col items-center py-16 px-4 bg-slate-50 min-h-screen">
-      <section className="w-full max-w-4xl">
-        <h1 className="text-4xl font-bold mb-4 text-center text-blue-900">Our Blog</h1>
-        <p className="text-xl text-center mb-12 text-gray-600">We are all about your financial well-being. Check out our resources below.</p>
-        
-        <div className="space-y-8">
-          <article className="bg-white border border-gray-200 p-8 rounded-xl shadow-sm flex flex-col md:flex-row gap-8 items-center hover:shadow-md transition">
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold mb-3 text-blue-900">Financial Success</h2>
-              <p className="mb-6 text-gray-600">Elevate your financial success with experts-chosen solutions. Affiliates benefit Advantage financial and empower lives.</p>
-              <Link href="#" className="text-blue-600 font-bold hover:underline flex items-center gap-2">
-                Read more <img src="/Chevron_Right_DT.png" alt="Arrow" className="h-3" />
-              </Link>
-            </div>
-            <div className="w-full md:w-1/3">
-              <img src="/financial_success_img_DT.png" alt="Financial Success" className="w-full rounded-lg object-cover" />
-            </div>
-          </article>
+    <>
+      {/* Load Trustpilot Widget Script */}
+      <Script src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" strategy="lazyOnload" />
 
-          <article className="bg-white border border-gray-200 p-8 rounded-xl shadow-sm flex flex-col md:flex-row gap-8 items-center hover:shadow-md transition">
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold mb-3 text-blue-900">Empowering Lives</h2>
-              <p className="mb-6 text-gray-600">We empower lives by restoring financial freedom and peace of mind.</p>
-              <Link href="#" className="text-blue-600 font-bold hover:underline flex items-center gap-2">
-                Read more <img src="/Chevron_Right_DT.png" alt="Arrow" className="h-3" />
-              </Link>
-            </div>
-            <div className="w-full md:w-1/3">
-              <img src="/empowering_lives_img_DT.png" alt="Empowering Lives" className="w-full rounded-lg object-cover" />
-            </div>
-          </article>
+      {/* Blog Hero Section */}
+      <section className="blog-hero">
+        <div className="blog-hero-container">
+          <div className="blog-hero-content">
+            <h1>Gain an Advantage: resources for financial management</h1>
+            <p className="blog-hero-subtitle">
+              Articles to help you turn your financial dreams into reality and enjoy a brighter, more secure future.
+            </p>
+          </div>
+          <div className="blog-hero-image">
+            <img src="/blog-hero-img-DT.png" alt="Woman with child planning finances" />
+          </div>
         </div>
       </section>
-    </div>
+
+      {/* Blog Intro & Grid Section */}
+      <section className="blog-intro-section">
+        <div className="blog-intro-container">
+          <h2>We're all about your financial wellbeing</h2>
+          <p className="blog-intro-text">
+            Explore our latest articles designed to help you make confident, informed financial choices.
+          </p>
+          
+          <div className="blog-grid">
+            {/* Card 1 */}
+            <div className="blog-card">
+              <div className="blog-image">
+                <img src="/financial_success_img_DT.png" alt="Financial Success" className="blog-card-image" />
+              </div>
+              <div className="blog-card-content">
+                <h3 className="blog-card-title">Financial Success</h3>
+                <p className="blog-card-excerpt">
+                  Elevate your financial success with customized loan solutions. (All loans funded through 3rd party lenders)
+                </p>
+                <Link href="/blog/financialsuccess" className="blog-card-link">
+                  Read more <img src="/Chevron_Right_DT.png" alt="Arrow" className="blog-arrow" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Card 2 */}
+            <div className="blog-card">
+              <div className="blog-image">
+                <img src="/empowering_lives_img_DT.png" alt="Empowering Lives" className="blog-card-image" />
+              </div>
+              <div className="blog-card-content">
+                <h3 className="blog-card-title">Empowering Lives</h3>
+                <p className="blog-card-excerpt">
+                  We empower lives by restoring financial freedom and peace of mind.
+                </p>
+                <Link href="/blog/empoweringlives" className="blog-card-link">
+                  Read more <img src="/Chevron_Right_DT.png" alt="Arrow" className="blog-arrow" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="blog-cta-container">
+            <p className="blog-cta-title">Ready to find your solution?</p>
+            <Link href="/verify" className="btn-check-loan-options">
+              Check your loan options
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Blog Reviews (Trustpilot) Section */}
+      <section className="blog-reviews-section">
+        <div className="blog-reviews-container">
+          <div className="blog-reviews-header">
+            <h2>Transparent pricing and repayment terms</h2>
+            <p>See why thousands of borrowers have chosen us:</p>
+          </div>
+          <div 
+            className="trustpilot-widget" 
+            data-locale="en-US" 
+            data-template-id="54ad5defc6454f065c28af8b" 
+            data-businessunit-id="64f10ba8d79983d2c4f6adc6" 
+            data-token="66117040-b542-4651-8ff0-df1ad0835d2d" 
+            data-style-height="240px" 
+            data-style-width="100%" 
+            data-theme="dark" 
+            data-stars="4,5" 
+            data-review-languages="en" 
+            data-text-color="#FFFFFF" 
+            style={{ position: 'relative' }}
+          >
+            <iframe 
+              title="Customer reviews powered by Trustpilot" 
+              loading="lazy" 
+              src="https://widget.trustpilot.com/trustboxes/54ad5defc6454f065c28af8b/index.html?templateId=54ad5defc6454f065c28af8b&businessunitId=64f10ba8d79983d2c4f6adc6#locale=en-US&token=66117040-b542-4651-8ff0-df1ad0835d2d&styleHeight=240px&styleWidth=100%25&theme=dark&stars=4%2C5&reviewLanguages=en&textColor=%23FFFFFF" 
+              style={{ position: 'relative', height: '240px', width: '100%', borderStyle: 'none', display: 'block', overflow: 'hidden' }}
+            ></iframe>
+          </div>
+        </div>
+      </section>
+    </>
   );
 }

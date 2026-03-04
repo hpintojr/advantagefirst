@@ -1,0 +1,718 @@
+/* ==========================================
+   BLOG PAGE STYLES
+   ========================================== */
+
+/* ==========================================
+   SECTION 1: BLOG HERO
+   ========================================== */
+
+.blog-hero {
+    background: linear-gradient(180deg, #1D315F 58.33%, #000000 170.84%);
+    position: relative;
+}
+
+.blog-hero-container {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    padding-left: 4rem;
+}
+
+.blog-hero-content {
+    padding: 40px 0;
+}
+
+.blog-hero-content h1 {
+    color: #fff;
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+}
+
+.blog-hero-subtitle {
+    color: #fff;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+}
+
+.blog-hero-image {
+    position: relative;
+    margin-left: auto;
+    width: 100%;
+    top: 40px;
+}
+
+.blog-hero-image img {
+    width: 70%;
+    position: relative;
+    right: -30%;
+    height: auto;
+    display: block;
+    border-radius: 12px 0 0 12px;
+}
+
+/* ==========================================
+   SECTION 2: BLOG INTRO & CARDS (COMBINED)
+   ========================================== */
+
+.blog-intro-section {
+    background-color: #4486D326;
+    padding: 80px 40px 40px
+}
+
+.blog-intro-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.blog-intro-container h2 {
+    color: #1D315F;
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 0.75rem;
+}
+
+.blog-intro-text {
+    color: #1D315F;
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 900px;
+    margin: 0 auto 3rem;
+}
+
+/* Blog Cards Grid */
+.blog-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-bottom: 0;
+}
+
+.blog-card {
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    transition: transform 0.3s;
+}
+
+.blog-card:hover {
+    transform: translateY(-4px);
+}
+
+.blog-card-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.blog-card-content {
+    padding: 1.5rem 1.5rem 1.5rem 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.blog-card-title {
+    color: #1D315F;
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin-bottom: 0.75rem;
+}
+
+.blog-card-excerpt {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+}
+
+.blog-card-link {
+    color: #0F75BC;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
+.blog-card-link:hover {
+    color: #357abd;
+}
+
+.blog-arrow {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s;
+    margin-top: 4px;
+}
+
+.blog-card-link:hover .blog-arrow {
+    transform: translateX(4px);
+}
+
+/* ==========================================
+   SECTION 3: BLOG CTA
+   ========================================== */
+.blog-reviews-section {
+    background: linear-gradient(180deg, #1D315F 58.33%, #000000 170.84%);
+    padding: 80px 40px 10px 40px;
+    color: white;
+    text-align: center;
+}
+
+.blog-reviews-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.blog-reviews-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.blog-reviews-header p {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+}
+
+.blog-cta-section {
+    background: linear-gradient(180deg, #1D315F 58.33%, #000000 170.84%);
+    padding: 3rem 2rem;
+    text-align: center;
+}
+
+.blog-cta-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Financial Success Blog Post - Section 1: Hero with Image */
+.fs-hero-section {
+    background-color: #0F75BC1A;
+    padding: 80px 0 0 0;
+}
+
+.fs-hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.fs-hero-content h1 {
+    color: #1D315F;
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.fs-hero-subtitle {
+    color: #1D315F;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin: 0;
+}
+
+.fs-hero-image-wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.fs-hero-image {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+}
+
+/* Financial Success Blog Post - Section 2: Steps Content */
+.fs-steps-section {
+    background-color: #0F75BC1A;
+    padding: 40px;
+}
+
+.fs-steps-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.fs-step {
+    margin-bottom: 20px;
+}
+
+.fs-step h3 {
+    color: #1D315F;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.fs-step p {
+    color: #1D315F;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin: 0;
+}
+
+.fs-conclusion {
+    color: #1D315F;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.fs-cta-text {
+    color: #1D315F;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.fs-phone {
+    display: block;
+    color: #1D315F;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+.fs-next-article {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #0F75BC;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: gap 0.3s ease;
+    float: right;
+}
+
+.fs-next-article:hover {
+    gap: 12px;
+}
+
+.fs-next-article svg {
+    margin-top: 2px;
+    transition: transform 0.3s ease;
+}
+
+.fs-next-article:hover svg {
+    transform: translateX(4px);
+}
+
+.fs-phone-link {
+    color: #1D315F;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.fs-phone-link:hover {
+    color: #0F75BC;
+    text-decoration: underline;
+}
+
+.fs-hero-image-mobile {
+    display: none;
+}
+
+.blog-cta-section {
+    background-color: #1e3a5f; /* Dark blue background */
+    padding: 80px 40px 10px 40px;
+    text-align: center;
+}
+
+.blog-cta-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.trustpilot-heading {
+    color: #ffffff;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.trustpilot-subheading {
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+.trustpilot-widget {
+    margin: 20px auto;
+    max-width: 1000px;
+    position: relative;
+}
+
+.tp-widget-review {
+    height: 140px;
+    padding: 20px;
+    background: white;
+}
+
+.wrapper-bottom .tp-widget-profile-link {
+    color: white;
+}
+
+.wrapper-bottom .tp-widget-profile-link a {
+    color: white;
+}
+
+.blog-cta-title {
+    color: #0F75BC;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.btn-check-loan-options {
+    display: inline-block;
+    background-color: #dc3545; /* Red button */
+    color: #ffffff;
+    padding: 1rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.btn-check-loan-options:hover {
+    background-color: #c82333;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .trustpilot-heading {
+        font-size: 1.5rem;
+    }
+}
+
+/* Empowering Lives Blog Post - Section 1: Hero with Image */
+.el-hero-section {
+    background-color: #0F75BC1A;
+    padding: 80px 0 0 0;
+}
+
+.el-hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+}
+
+.el-hero-content h1 {
+    color: #1D315F;
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    line-height: 1.2;
+}
+
+.el-hero-subtitle {
+    color: #1D315F;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin: 0;
+}
+
+.el-hero-image-wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.el-hero-image {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+}
+
+/* Empowering Lives Blog Post - Section 2: Steps Content */
+.el-steps-section {
+    background-color: #0F75BC1A;
+    padding: 40px;
+}
+
+.el-steps-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.el-step {
+    margin-bottom: 20px;
+}
+
+.el-step h3 {
+    color: #1D315F;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.el-step p {
+    color: #1D315F;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin: 0;
+}
+
+.el-conclusion {
+    color: #1D315F;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+.el-cta-text {
+    color: #1D315F;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.el-phone {
+    display: block;
+    color: #1D315F;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+.el-next-article {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #0F75BC;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: gap 0.3s ease;
+    float: right;
+}
+
+.el-next-article:hover {
+    gap: 12px;
+}
+
+.el-next-article svg {
+    transition: transform 0.3s ease;
+    margin-top: 2px;
+}
+
+.el-next-article:hover svg {
+    transform: translateX(4px);
+}
+
+.el-phone-link {
+    color: #1D315F;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.el-phone-link:hover {
+    color: #0F75BC;
+    text-decoration: underline;
+}
+
+.el-hero-image-mobile {
+    display: none;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+@media (max-width: 768px) {
+    .blog-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .blog-hero {
+        padding: 40px 0 0 40px;
+    }
+
+    .blog-hero-container {
+        grid-template-columns: 1fr;
+        gap: 0;
+        padding-left: 0;
+    }
+    
+    .blog-hero-content {
+        padding: 0 40px 0 0;
+    }
+
+    .blog-hero-content h1 {
+        font-size: 2.25rem;
+    }
+
+    .blog-hero-subtitle {
+        font-size: 1rem;
+    }
+
+    .blog-hero-image {
+        max-height: 380px;
+    }
+
+    .blog-hero-image img {
+        border-radius: 12px;
+        position: relative;
+    }
+    
+    .blog-intro-container {
+        text-align: left;
+    }
+
+    .blog-intro-container h2 {
+        font-size: 1.75rem;
+    }
+
+    .blog-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+}
+
+@media (max-width: 768px) {
+    .blog-reviews-section {
+        padding: 60px 20px;
+    }
+
+    .blog-reviews-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .carousel-arrow {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .fs-hero-container {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .fs-hero-content {
+        padding: 0 40px;
+        order: 2;
+    }
+
+    .fs-hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .fs-hero-image-wrapper {
+        justify-content: flex-end;
+    }
+
+    .fs-step h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Hide desktop image on mobile */
+    .fs-hero-image-desktop {
+        display: none;
+    }
+
+    /* Show mobile image */
+    .fs-hero-image-mobile {
+        display: flex;
+        order: 1;
+    }
+
+    .fs-hero-image {
+        max-width: 100%;
+        border-radius: 0;
+    }
+
+    .el-hero-container {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .el-hero-content {
+        padding: 0 40px;
+        order: 2;
+    }
+
+    .el-hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .el-hero-image-wrapper {
+        justify-content: flex-end;
+    }
+
+    .el-step h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Hide desktop image on mobile */
+    .el-hero-image-desktop {
+        display: none;
+    }
+
+    /* Show mobile image */
+    .el-hero-image-mobile {
+        display: flex;
+        order: 1; /* Place image first */
+    }
+
+    .el-hero-image {
+        max-width: 100%;
+        border-radius: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .fs-hero-section {
+        padding: 0;
+    }
+
+    .fs-steps-section {
+        padding: 20px 40px 40px;
+    }
+
+    .fs-hero-content h1 {
+        font-size: 1.75rem;
+    }
+
+    .el-hero-section {
+        padding: 0;
+    }
+
+    .el-steps-section {
+        padding: 20px 40px 40px;
+    }
+
+    .el-hero-content h1 {
+        font-size: 1.75rem;
+    }
+}
