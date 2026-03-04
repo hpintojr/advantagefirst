@@ -1,0 +1,710 @@
+/* Hero Section */
+.hero-section {
+    display: flex;
+    align-items: stretch; 
+    position: relative;
+    max-height: 600px;
+    background-image: none; /* remove previous background image */
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* left blue column */
+.hero-container {
+    flex: 0 0 50%;
+    background-color: #1D315F;
+    padding: 40px 40px 40px 80px;
+    box-sizing: border-box;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 1;
+}
+
+/* right image column */
+.hero-image {
+    flex: 1 1 auto;
+    overflow: hidden;
+    display: block;
+}
+
+/* actual image: contain on desktop, positioned to the right */
+.hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: right center;
+    display: block;
+}
+
+.hero-content h1 {
+    color: #fff;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+}
+
+.hero-content > p {
+    color: #fff;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.btn-hero {
+    display: inline-block;
+    background-color: #D9312E;
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: background-color 0.3s;
+    margin-bottom: 3rem;
+    width: 80%;
+    text-align: center;
+}
+
+.btn-hero:hover {
+    background-color: #c0392b;
+}
+
+.hero-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.hero-features li {
+    color: #fff;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.hero-features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.25rem;
+    width: 16px;
+    height: 16px;
+    color: #4a9eff;
+    font-weight: bold;
+    background-image: url('../images/Arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+/* Journey & Trustpilot Combined Section */
+.trustpilot-section {
+    background-color: #4486D326;
+    padding: 40px;
+    position: relative;
+}
+
+.trustpilot-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* White Card that floats up */
+.journey-card {
+    background-color: #fff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 10;
+}
+
+.journey-card-content {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 3rem;
+    padding: 3rem;
+    align-items: center;
+}
+
+.journey-icon {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.journey-icon img {
+    width: 150px;
+    height: auto;
+}
+
+.journey-text h2 {
+    color: #1D315F;
+    font-size: 1.75rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.journey-text > p {
+    color: #1D315F;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.journey-features {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem 2.5rem;
+}
+
+.journey-features .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid #D3D3D3;
+}
+
+.journey-features .feature-item:last-child {
+    border-bottom: none;
+}
+
+.journey-features .feature-item h3 {
+    flex-shrink: 0;
+    min-width: 180px; /* Adjust based on your longest heading */
+    margin: 0;
+}
+
+.journey-features .feature-item p {
+    flex-grow: 1;
+    margin: 0;
+}
+
+.feature-item h3 {
+    color: #0F75BC;
+    font-size: 1.05rem;
+    font-weight: 900;
+}
+
+.feature-item p {
+    color: #1D315F;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Button below the card */
+.trustpilot-button-wrapper {
+    text-align: center;
+}
+
+.btn-trustpilot {
+    display: inline-block;
+    background-color: #D9312E;
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: background-color 0.3s;
+    width: 250px;
+    text-align: center;
+}
+
+.btn-journey:hover {
+    background-color: #c0392b;
+}
+
+/* ==========================================
+   Trustpilot Reviews Section
+   ========================================== */
+
+.tp-cta-section {
+    text-align: center;
+}
+
+.tp-cta-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.trustpilot-heading {
+    color: #1D315F;
+    font-size: 1.75rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.trustpilot-subheading {
+    color: #1D315F;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* ==========================================
+   SECTION 3: SIMPLE SOLUTIONS
+   ========================================== */
+
+.simple-solutions-section {
+    padding: 5rem 2rem;
+    background-color: #fff;
+}
+
+.simple-solutions-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.simple-solutions-container h2 {
+    color: #1D315F;
+    font-size: 1.75rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    color: #1D315F;
+    font-size: 1rem;
+    margin-bottom: 3rem;
+}
+
+.solutions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.solution-card {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 1.5rem;
+    text-align: left;
+    align-items: start;
+}
+
+.solution-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.solution-icon img {
+    width: 70px;
+    height: 70px;
+}
+
+.solution-content h3 {
+    color: #0F75BC;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.solution-content p {
+    color: #1D315F;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.btn-learn-more {
+    display: inline-block;
+    color: #0F75BC;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 2px solid #0F75BC;
+    padding: 0.5rem 1.5rem;
+    border-radius: 4px;
+    transition: all 0.3s;
+    width: 250px;
+    text-align: center;
+}
+
+.btn-learn-more:hover {
+    background-color: #0F75BC;
+    color: #fff;
+}
+
+/* ==========================================
+   SECTION 4: FINANCIAL WELL-BEING (BLOG CARDS)
+   ========================================== */
+
+.financial-wellbeing-section {
+    padding: 5rem 2rem;
+    background-color: #4486D326;
+}
+
+.financial-wellbeing-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.financial-wellbeing-container h2 {
+    color: #1D315F;
+    font-size: 1.75rem;
+    font-weight: 900;
+    margin-bottom: 0.5rem;
+}
+
+.blog-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+.blog-card {
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-image {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+
+.blog-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.blog-content {
+    padding: 1.5rem 1.5rem 1.5rem 0;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.blog-content h3 {
+    color: #1D315F;
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin-bottom: 0.75rem;
+}
+
+.blog-content p {
+    color: #1D315F;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.blog-link {
+    color: #0F75BC;
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
+.blog-link:hover {
+    color: #357abd;
+}
+
+.blog-arrow {
+    width: 16px;
+    height: 16px;
+    position: relative;
+    top: 2px;
+    transition: transform 0.3s;
+}
+
+.blog-link:hover .blog-arrow {
+    transform: translateX(4px);
+}
+
+.blog-button-wrapper {
+    margin-top: 2rem;
+}
+
+.btn-see-more {
+    display: inline-block;
+    background-color: #D9312E;
+    color: #fff;
+    padding: 1rem 3rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: background-color 0.3s;
+    width: 250px;
+    text-align: center;
+}
+
+.btn-see-more:hover {
+    background-color: #c0392b;
+}
+
+/* ==========================================
+   SECTION 5: CTA SECTION (DARK BLUE)
+   ========================================== */
+
+.cta-section {
+    background: linear-gradient(180deg, #1D315F 58.33%, #000000 170.84%);
+    padding: 40px 0 40px 40px;
+}
+
+.cta-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+}
+
+.cta-content h2 {
+    color: #fff;
+    font-size: 2.25rem;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+}
+
+.cta-loan-subtitle {
+    font-size: 18px;
+    line-height: 1.6;
+    margin: 20px 0;
+    color: #fff;
+}
+
+.cta-loan-table {
+    width: 100%;
+    margin: 40px 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.cta-loan-table th {
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 600;
+    color: #fff;
+    font-size: 14px;
+}
+
+.cta-loan-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 14px;
+}
+
+.cta-loan-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.cta-loan-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.cta-content p {
+    color: #fff;
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}
+
+.btn-get-quote {
+    display: inline-block;
+    background-color: #D9312E;
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: background-color 0.3s;
+    width: 250px;
+    text-align: center;
+}
+
+.btn-get-quote:hover {
+    background-color: #c0392b;
+}
+
+.cta-image img {
+    width: 100%;
+    height: auto;
+}
+
+.hero-mobile-image {
+    display: none;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN FOR SECTIONS 3-5
+   ========================================== */
+
+@media (max-width: 768px) {
+    .solutions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .blog-cards-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cta-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .simple-solutions-container h2,
+    .financial-wellbeing-container h2 {
+        font-size: 1.75rem;
+    }
+
+    .solution-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .solution-icon {
+        margin-bottom: 1rem;
+    }
+    
+    .hero-container {
+        margin: 0;
+        width: 100%;
+        min-height: unset;
+    }
+    
+    .hero-section {
+        background-image: none;
+        max-height: unset;
+        flex-direction: column;
+    }
+    
+    .section-subtitle {
+        line-height: 1.2;
+    }
+    
+    .financial-wellbeing-section {
+        padding: 40px;
+    }
+    
+    .financial-wellbeing-container {
+        text-align: left;
+    }
+
+    .cta-image img {
+        width: 100%;
+        height: auto;
+    }
+    
+    .cta-content {
+        padding-right: 40px;
+    }
+
+    .cta-content h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-image {
+        display: none;
+    }
+    
+    .hero-container {
+        max-width: 100%;
+        padding: 40px;
+    }
+    
+    .btn-hero {
+        width: 250px;
+    }
+    
+    .hero-content {
+        max-width: 100%;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .trustpilot-section {
+        padding: 40px;
+    }
+
+    .journey-card-content {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        padding: 40px;
+        gap: 2rem;
+        text-align: left;
+    }
+    
+    .journey-features .feature-item {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .journey-icon {
+        justify-content: center;
+    }
+
+    .trustpilot-reviews {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .journey-card {
+        top: 0;
+    }
+
+    .trustpilot-reviews {
+        grid-template-columns: 1fr;
+    }
+
+    .carousel-arrow {
+        display: none;
+    }
+}
+
+/* Show on mobile only */
+@media (max-width: 768px) {
+    .hero-mobile-image {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .hero-mobile-image img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+
+    .mobile-only {
+        display: inline;
+    }
+}
