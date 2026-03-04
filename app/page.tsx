@@ -8,12 +8,8 @@ export default function Home() {
         <div className="hero-container">
           <div className="hero-content">
             <h1>Get the Advantage to financial freedom</h1>
-            <p>
-              The money you need, when you need it, with flexible terms, competitive rates, and a team that puts you first.
-            </p>
-            <Link href="/verify" className="btn-hero">
-              Apply Now
-            </Link>
+            <p>The money you need, when you need it, with flexible terms, competitive rates, and a team that puts you first.</p>
+            <Link href="/verify" className="btn-hero">Apply Now</Link>
             <ul className="hero-features">
               <li>Amounts up to $100,000</li>
               <li>Fixed rates as low as 5.99% APR</li>
@@ -21,7 +17,7 @@ export default function Home() {
             </ul>
           </div>
         </div>
-        <div className="hero-image">
+        <div className="hero-image" aria-hidden="false">
           <img src="/home-hero-img-DT.jpg" alt="Couple reviewing finances" />
         </div>
         <div className="hero-mobile-image">
@@ -29,50 +25,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trustpilot & Journey Section */}
+      {/* Trustpilot Section */}
       <section className="trustpilot-section">
         <div className="trustpilot-container">
-          {/* Journey Card */}
-          <div className="journey-card">
-            <div className="journey-card-content">
-              <div className="journey-icon">
-                <img src="/get-started-icon_DT.png" alt="Financial Journey" />
-              </div>
-              <div className="journey-text">
-                <h2>Start your journey with Advantage First</h2>
-                <p>
-                  Whether it's consolidating debt, covering expenses, or funding big projects, you can secure the money necessary to achieve your goals without difficulty or stress. Elevate your financial success with a customized loan solution through Advantage First's network of lenders.
-                </p>
-                <div className="journey-features">
-                  <div className="feature-item">
-                    <h3>Quick approvals</h3>
-                    <p>Fast decisions so you can move forward with confidence</p>
-                  </div>
-                  <div className="feature-item">
-                    <h3>Flexible loan options</h3>
-                    <p>Tailored to your situation and aspirations</p>
-                  </div>
-                  <div className="feature-item">
-                    <h3>Competitive rates</h3>
-                    <p>Fixed interest for the life of your loan</p>
-                  </div>
-                  <div className="feature-item">
-                    <h3>No hidden fees</h3>
-                    <p>Transparent pricing and repayment terms</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Trustpilot Inner Section */}
-          <div className="tp-cta-section mt-16 pt-8">
+          <div className="tp-cta-section">
             <div className="tp-cta-container">
               <h2 className="trustpilot-heading">Transparent pricing and repayment terms</h2>
               <p className="trustpilot-subheading">See why thousands of borrowers have chosen us:</p>
               
               <div 
-                className="mb-8 w-full max-w-5xl mx-auto" 
+                className="trustpilot-widget" 
                 data-locale="en-US" 
                 data-template-id="54ad5defc6454f065c28af8b" 
                 data-businessunit-id="64f10ba8d79983d2c4f6adc6" 
@@ -90,11 +52,41 @@ export default function Home() {
                   style={{ position: 'relative', height: '240px', width: '100%', borderStyle: 'none', display: 'block', overflow: 'hidden' }}
                 ></iframe>
               </div>
+            </div>
+          </div>
+          <div className="trustpilot-button-wrapper">
+            <Link href="/verify" className="btn-trustpilot">Apply Now</Link>
+          </div>
+        </div>
+      </section>
 
-              <div className="trustpilot-button-wrapper">
-                <Link href="/verify" className="btn-trustpilot">
-                  Apply Now
-                </Link>
+      {/* Journey Section */}
+      <section className="journey-section">
+        <div className="journey-card">
+          <div className="journey-card-content">
+            <div className="journey-icon">
+              <img src="/get-started-icon_DT.png" alt="Financial Journey" />
+            </div>
+            <div className="journey-text">
+              <h2>Start your journey with Advantage First</h2>
+              <p>Whether it's consolidating debt, covering expenses, or funding big projects, you can secure the money necessary to achieve your goals without difficulty or stress. Elevate your financial success with a customized loan solution through Advantage First's network of lenders.</p>
+              <div className="journey-features">
+                <div className="feature-item">
+                  <h3>Quick approvals</h3>
+                  <p>Fast decisions so you can move forward with confidence</p>
+                </div>
+                <div className="feature-item">
+                  <h3>Flexible loan options</h3>
+                  <p>Tailored to your situation and aspirations</p>
+                </div>
+                <div className="feature-item">
+                  <h3>Competitive rates</h3>
+                  <p>Fixed interest for the life of your loan</p>
+                </div>
+                <div className="feature-item">
+                  <h3>No hidden fees</h3>
+                  <p>Transparent pricing and repayment terms</p>
+                </div>
               </div>
             </div>
           </div>
@@ -118,7 +110,6 @@ export default function Home() {
                 <Link href="/services" className="btn-learn-more">Learn more</Link>
               </div>
             </div>
-            
             <div className="solution-card">
               <div className="solution-icon">
                 <img src="/debt-consolidation-icon-DT.png" alt="Debt consolidation" />
@@ -129,7 +120,6 @@ export default function Home() {
                 <Link href="/services" className="btn-learn-more">Learn more</Link>
               </div>
             </div>
-
             <div className="solution-card">
               <div className="solution-icon">
                 <img src="/home-improvements-icon_DT.png" alt="Home improvement" />
@@ -140,7 +130,6 @@ export default function Home() {
                 <Link href="/services" className="btn-learn-more">Learn more</Link>
               </div>
             </div>
-
             <div className="solution-card">
               <div className="solution-icon">
                 <img src="/business-needs-icon_DT.png" alt="Business needs" />
@@ -200,9 +189,7 @@ export default function Home() {
             </table>
             
             <p>Let's explore your loan options today.</p>
-            <Link href="/verify" className="btn-get-quote">
-              Apply Now
-            </Link>
+            <Link href="/verify" className="btn-get-quote">Apply Now</Link>
           </div>
           <div className="cta-image">
             <img src="/end_CTA_img_DT.png" alt="Woman with laptop" />
@@ -217,7 +204,7 @@ export default function Home() {
           <p className="section-subtitle">Check out our resources page for useful blog topics, like:</p>
           
           <div className="blog-cards-grid">
-            <div className="blog-card bg-white">
+            <div className="blog-card">
               <div className="blog-image">
                 <img src="/financial_success_img_DT.png" alt="Financial Success" />
               </div>
@@ -230,7 +217,7 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="blog-card bg-white">
+            <div className="blog-card">
               <div className="blog-image">
                 <img src="/empowering_lives_img_DT.png" alt="Empowering Lives" />
               </div>
@@ -245,9 +232,7 @@ export default function Home() {
           </div>
           
           <div className="blog-button-wrapper">
-            <Link href="/blog" className="btn-see-more">
-              See more
-            </Link>
+            <Link href="/blog" className="btn-see-more">See more</Link>
           </div>
         </div>
       </section>
