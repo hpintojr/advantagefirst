@@ -34,10 +34,27 @@ export default function Home() {
       <section className="w-full py-16 text-center px-4 bg-white">
         <h2 className="text-3xl font-bold text-blue-900 mb-2">Transparent pricing and repayment terms</h2>
         <p className="text-xl text-gray-600 mb-8">See why thousands of borrowers have chosen us:</p>
-        <div className="mb-8 p-6 bg-gray-50 border inline-block rounded-lg text-lg text-gray-500">
-          [Trustpilot Widget Placeholder]
+        
+        <div 
+          className="mb-8 w-full max-w-5xl mx-auto" 
+          data-locale="en-US" 
+          data-template-id="54ad5defc6454f065c28af8b" 
+          data-businessunit-id="64f10ba8d79983d2c4f6adc6" 
+          data-token="66117040-b542-4651-8ff0-df1ad0835d2d" 
+          data-style-height="240px" 
+          data-style-width="100%" 
+          data-stars="5" 
+          data-review-languages="en" 
+          style={{ position: 'relative' }}
+        >
+          <iframe 
+            title="Customer reviews powered by Trustpilot" 
+            loading="lazy" 
+            src="https://widget.trustpilot.com/trustboxes/54ad5defc6454f065c28af8b/index.html?templateId=54ad5defc6454f065c28af8b&businessunitId=64f10ba8d79983d2c4f6adc6#locale=en-US&token=66117040-b542-4651-8ff0-df1ad0835d2d&styleHeight=240px&styleWidth=100%25&stars=5&reviewLanguages=en" 
+            style={{ position: 'relative', height: '240px', width: '100%', borderStyle: 'none', display: 'block', overflow: 'hidden' }}
+          ></iframe>
         </div>
-        <br />
+
         <Link href="/verify" className="inline-block bg-blue-600 text-white font-bold px-8 py-3 rounded hover:bg-blue-700 transition">
           Apply Now
         </Link>
