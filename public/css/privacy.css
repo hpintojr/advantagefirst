@@ -1,0 +1,124 @@
+/* wwwroot/css/privacy.css */
+
+.privacy-container {
+    background-color: #e8f4f8;
+    padding: 3rem 2rem;
+    min-height: 100vh;
+}
+
+.privacy-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.privacy-content h1 {
+    color: #0F75BC;
+    font-size: 1.75rem;
+    font-weight: 700;
+    padding-bottom: 1rem;
+}
+
+.privacy-section {
+    margin-bottom: 20px;
+}
+
+.privacy-section h2 {
+    color: #1e2749;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.privacy-section h3 {
+    color: #1e2749;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.privacy-section p {
+    font-size: 0.95rem;
+}
+
+.privacy-section ul {
+    margin: 1rem 0 1rem 1.5rem;
+    color: #4a5568;
+}
+
+.privacy-section ul li {
+    margin-bottom: 0.75rem;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.privacy-section ol {
+    margin: 1rem 0 1rem 1.5rem;
+    color: #4a5568;
+}
+
+.privacy-section ol li {
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+    font-size: 0.95rem;
+}
+
+.privacy-section strong {
+    color: #1e2749;
+    font-weight: 600;
+}
+
+.privacy-section a {
+    color: #0F75BC;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.privacy-section a:hover {
+    color: #357abd;
+    text-decoration: underline;
+}
+
+.privacy-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.privacy-footer-links a {
+    color: #0F75BC;
+    background: white;
+    padding: 5px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.privacy-footer-links a:hover {
+    color: #357abd;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .privacy-container {
+        padding: 2rem 1rem;
+    }
+
+    .privacy-content {
+        padding: 2rem 1.5rem;
+    }
+
+    .privacy-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .privacy-section h2 {
+        font-size: 1.15rem;
+    }
+
+    .privacy-footer-links {
+        gap: 0.75rem;
+    }
+}
