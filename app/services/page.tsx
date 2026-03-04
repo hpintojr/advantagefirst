@@ -1,8 +1,12 @@
 import Link from 'next/link';
+import Script from 'next/script';
 
 export default function Services() {
   return (
     <>
+      {/* Load Trustpilot Widget Script */}
+      <Script src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" strategy="lazyOnload" />
+
       {/* Services Hero Section */}
       <section className="services-hero">
         <div className="services-hero-container">
@@ -14,7 +18,7 @@ export default function Services() {
             </Link>
           </div>
           <div className="services-hero-image">
-            <img src="/images/services_hero_img_DT.png" alt="Couple in wedding dress shop" />
+            <img src="/services_hero_img_DT.png" alt="Couple in wedding dress shop" />
           </div>
         </div>
       </section>
@@ -57,7 +61,7 @@ export default function Services() {
       <section className="expertise-section">
         <div className="expertise-container">
           <div className="expertise-image-desktop">
-            <img src="/images/advantage_img_DT.png" alt="Couple with laptop" />
+            <img src="/advantage_img_DT.png" alt="Couple with laptop" />
           </div>
           <div className="expertise-content">
             <h2>Your Advantage is our expertise.</h2>
@@ -70,7 +74,7 @@ export default function Services() {
               <li>An easy process with fast approval decisions</li>
             </ul>
             <div className="expertise-image expertise-image-mobile">
-              <img src="/images/services_img_MB.png" alt="Couple with laptop" />
+              <img src="/services_img_MB.png" alt="Couple with laptop" />
             </div>
             <Link href="/verify" className="btn-check-options-red">
               Check your loan options
@@ -109,19 +113,19 @@ export default function Services() {
           <div className="about-features">
             <div className="about-feature-card">
               <div className="about-icon">
-                <img src="/images/loan-options_icon_DT.png" alt="Loan options icon" />
+                <img src="/loan-options_icon_DT.png" alt="Loan options icon" />
               </div>
               <h3>Loan options that make sense for your situation and budget</h3>
             </div>
             <div className="about-feature-card">
               <div className="about-icon">
-                <img src="/images/support_icon_DT.png" alt="Support icon" />
+                <img src="/support_icon_DT.png" alt="Support icon" />
               </div>
               <h3>Support so you can seize opportunities and overcome obstacles</h3>
             </div>
             <div className="about-feature-card">
               <div className="about-icon">
-                <img src="/images/educational_icon_DT.png" alt="Education icon" />
+                <img src="/educational_icon_DT.png" alt="Education icon" />
               </div>
               <h3>Ongoing educational resources for financial wellness</h3>
             </div>
@@ -143,7 +147,7 @@ export default function Services() {
             </a>
           </div>
           <div className="discuss-image">
-            <img src="/images/services_end_CTA_img_DT.png" alt="Man with laptop" />
+            <img src="/services_end_CTA_img_DT.png" alt="Man with laptop" />
           </div>
         </div>
       </section>
