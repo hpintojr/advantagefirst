@@ -1,0 +1,518 @@
+/* ==========================================
+   SECTION 1: SERVICES HERO
+   ========================================== */
+
+.services-hero {
+    background: linear-gradient(180deg, #1D315F 58.33%, #000000 170.84%);
+    padding: 0 0 0 40px;
+    position: relative;
+}
+
+.services-hero-container {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.services-hero-content {
+    padding: 40px 0;
+}
+
+.services-hero-content h1 {
+    color: #fff;
+    font-size: 2.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.25rem;
+}
+
+.services-hero-content p {
+    color: #fff;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.btn-check-options {
+    display: inline-block;
+    background-color: #D9312E;
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: background-color 0.3s;
+}
+
+.btn-check-options:hover {
+    background-color: #c0392b;
+}
+
+.services-hero-image {
+    position: relative;
+    z-index: 10;
+    top: 40px;
+}
+
+.services-hero-image img {
+    width: 70%;
+    height: auto;
+    position: relative;
+    right: -30%;
+    border-radius: 12px 12px 0 0;
+    display: block;
+}
+
+/* ==========================================
+   SECTION 2: FINANCIAL FLEXIBILITY
+   ========================================== */
+
+.financial-flexibility-section {
+    background-color: #4486D326;
+    padding: 40px;
+}
+
+.financial-flexibility-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.financial-flexibility-container h2 {
+    color: #1D315F;
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 1.25rem;
+    max-width: 40%;
+}
+
+.intro-text {
+    color: #1D315F;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 3rem;
+    max-width: 900px;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
+    margin-bottom: 3rem;
+}
+
+.service-card h3 {
+    color: #0F75BC;
+    font-size: 1.15rem;
+    font-weight: 900;
+    margin-bottom: 0.75rem;
+}
+
+.service-card p {
+    color: #1D315F;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.services-button-wrapper {
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.solution-ready {
+    color: #0F75BC;
+    font-size: 1.15rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+
+.btn-get-quote {
+    display: inline-block;
+    background-color: #D9312E;
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: background-color 0.3s;
+}
+
+.btn-get-quote:hover {
+    background-color: #c0392b;
+}
+
+/* ==========================================
+   SECTION 3: YOUR ADVANTAGE IS OUR EXPERTISE
+   ========================================== */
+
+.expertise-section {
+    background-color: #fff;
+    padding: 40px 40px 40px 0;
+}
+
+.expertise-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+}
+
+.expertise-image-desktop img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+.expertise-content h2 {
+    color: #1D315F;
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 0.75rem;
+}
+
+.subtitle {
+    font-size: 1.05rem;
+    margin-bottom: 1.5rem;
+}
+
+.expertise-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+}
+
+.expertise-features li {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    padding-left: 1.75rem;
+    position: relative;
+}
+
+.expertise-features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.35rem;
+    width: 16px;
+    height: 16px;
+    color: #4a9eff;
+    font-weight: bold;
+    background-image: url('../images/Arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.btn-check-options-red {
+    display: inline-block;
+    background-color: #D9312E;
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: background-color 0.3s;
+}
+
+.btn-check-options-red:hover {
+    background-color: #c0392b;
+}
+
+/* ==========================================
+   SECTION 4: TRUSTPILOT BAR
+   ========================================== */
+
+.trustpilot-bar {
+    background-color: #e8f4f8;
+    padding: 1.5rem 2rem;
+}
+
+.trustpilot-bar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.trustpilot-bar-container p {
+    color: #4a5568;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.trustpilot-bar-container strong {
+    color: #1D315F;
+    font-weight: 700;
+}
+
+/* ==========================================
+   SECTION 5: A BIT MORE ABOUT US
+   ========================================== */
+
+.about-us-section {
+    background-color: #fff;
+    padding: 5rem 2rem;
+}
+
+.about-us-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-us-container h2 {
+    color: #1D315F;
+    font-size: 2rem;
+    font-weight: 900;
+    margin-bottom: 1.5rem;
+}
+
+.about-intro {
+    color: #1D315F;
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.about-tagline {
+    color: #1D315F;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 3rem;
+}
+
+.about-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    margin-top: 3rem;
+}
+
+.about-feature-card {
+    text-align: center;
+}
+
+.about-icon {
+    margin-bottom: 1.5rem;
+}
+
+.about-icon img {
+    width: auto;
+    height: 200px;
+}
+
+.about-feature-card h3 {
+    color: #1D315F;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* ==========================================
+   SECTION 6: LET'S DISCUSS YOUR NEEDS
+   ========================================== */
+
+.discuss-needs-section {
+    background: linear-gradient(180deg, #1D315F 58.33%, #000000 170.84%);
+    padding: 40px 0 40px 40px;
+}
+
+.discuss-needs-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+}
+
+.discuss-content h2 {
+    color: #fff;
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.discuss-subtitle {
+    color: #fff;
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+}
+
+.discuss-text {
+    color: #d1d5db;
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.btn-request-consultation {
+    display: inline-block;
+    background-color: #D9312E;
+    color: #fff;
+    padding: 1rem 2.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    transition: background-color 0.3s;
+}
+
+.btn-request-consultation:hover {
+    background-color: #c0392b;
+}
+
+.discuss-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+/* Hide mobile image by default (desktop) */
+.expertise-image-mobile {
+    display: none;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+@media (max-width: 768px) {
+    .about-features {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .services-hero-container {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .services-hero-content h1 {
+        font-size: 2.25rem;
+    }
+
+    .services-hero-image {
+        top: 60px;
+        margin-top: 0;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+    
+    .discuss-needs-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .discuss-needs-section {
+        padding: 40px 0 0 40px;
+    }
+    
+    .discuss-content {
+        padding-right: 40px;
+    }
+}
+
+@media (max-width: 768px) {
+    .expertise-section {
+        padding: 40px;
+    }
+
+    .expertise-container {
+        grid-template-columns: 1fr;
+    }
+
+    .expertise-image-desktop {
+        display: none;
+    }
+
+    .expertise-image-mobile {
+        display: block;
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+        left: -40px;
+    }
+
+    .expertise-image-mobile img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .expertise-content {
+        text-align: center;
+        width: 100%;
+    }
+
+    .expertise-content h2 {
+        text-align: left;
+    }
+
+    .expertise-content .subtitle {
+        text-align: left;
+    }
+
+    .expertise-features {
+        text-align: left;
+        margin: 0 auto;
+    }
+
+    .btn-check-options-red {
+        display: inline-block;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .services-hero {
+        padding: 40px 0 0 40px;
+    }
+    
+    .services-hero-content {
+        padding: 0;
+    }
+
+    .services-hero-content h1 {
+        font-size: 1.875rem;
+    }
+
+    .services-hero-content p {
+        font-size: 1rem;
+    }
+
+    .financial-flexibility-section {
+        padding: 3rem 1.5rem;
+    }
+
+    .financial-flexibility-container h2 {
+        font-size: 1.75rem;
+        max-width: 100%;
+        margin-top: 40px;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .services-button-wrapper {
+        margin-top: 1rem;
+    }
+    
+    .solution-ready {
+        text-align: left;
+    }
+}
