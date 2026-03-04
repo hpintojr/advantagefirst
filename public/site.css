@@ -1,0 +1,336 @@
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+.main-content {
+    min-height: calc(100vh - 400px);
+}
+
+/* Header Styles */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: #fff;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 1rem 0;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo img {
+    height: 60px;
+    width: auto;
+}
+
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.main-nav a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.main-nav a:hover,
+.main-nav a.active {
+    color: #D9312E;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.phone-number {
+    color: #333;
+    text-decoration: underline;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.btn-primary {
+    background-color: #D9312E;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 20px;
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #c0392b;
+}
+
+/* Hamburger Menu - Hidden by default */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: #1E3A5F;
+    margin: 5px 0;
+    transition: 0.3s;
+}
+
+/* Mobile Navigation - Hidden by default */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+}
+
+.mobile-nav.active {
+    display: block;
+}
+
+.mobile-nav ul {
+    list-style: none;
+    padding: 20px;
+    margin: 0;
+}
+
+.mobile-nav ul li {
+    padding: 15px 0;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.mobile-nav ul li a {
+    color: #1E3A5F;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+}
+
+/* Hamburger animation */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Mobile Styles - ONLY show hamburger on mobile */
+@media (max-width: 768px) {
+    .hamburger {
+        display: block; /* Show hamburger on mobile */
+    }
+
+    /* Hide desktop navigation */
+    .main-nav {
+        display: none !important;
+    }
+
+    /* Hide header actions on mobile */
+    .header-actions {
+        display: none;
+    }
+}
+
+/* Desktop Styles - Make sure hamburger is hidden */
+@media (min-width: 769px) {
+    .hamburger {
+        display: none !important; /* Force hide on desktop */
+    }
+
+    .mobile-nav {
+        display: none !important; /* Force hide mobile nav on desktop */
+    }
+}
+
+/* Footer Styles */
+.site-footer {
+    padding: 40px;
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.footer-top {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 4rem;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.footer-logo img {
+    height: 60px;
+    width: auto;
+}
+
+.footer-columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3rem;
+}
+
+.footer-column h4 {
+    color: #1D315F;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-column li {
+    margin-bottom: 1rem;
+}
+
+.footer-column a {
+    color: #6b7280;
+    text-decoration: none;
+    transition: color 0.3s;
+    font-size: 0.95rem;
+}
+
+.footer-column a:hover {
+    color: #1e2749;
+}
+
+.social-links {
+    display: flex;
+    gap: 1.25rem;
+}
+
+.social-links a {
+    color: #6b7280;
+    font-size: 1.3rem;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #1e2749;
+}
+
+.footer-bottom {
+    padding-top: 0;
+}
+
+.legal-text {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.legal-text p {
+    margin-bottom: 1.25rem;
+    line-height: 1.2;
+}
+
+/* Footer Mobile Styles */
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 40px;
+    }
+
+    .footer-content-box {
+        padding: 2rem 1.5rem;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .footer-top {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    .footer-logo {
+        text-align: center;
+    }
+
+    /* 2x2 Grid for Footer Columns */
+    .footer-columns {
+        grid-template-columns: 1fr 1fr; /* Two columns */
+        gap: 2rem 1.5rem;
+    }
+
+    .footer-column h4 {
+        font-size: 16px;
+        margin-bottom: 1rem;
+    }
+
+    .footer-column ul li {
+        margin-bottom: 0.75rem;
+    }
+
+    .footer-column a {
+        font-size: 14px;
+    }
+
+    .social-links {
+        justify-content: flex-start;
+        gap: 1rem;
+    }
+
+    .social-links a {
+        font-size: 16px;
+    }
+
+    /* Footer disclaimer */
+    .footer-bottom {
+        padding-top: 1.5rem;
+    }
+
+    .legal-text {
+        font-size: 12px;
+    }
+
+    .legal-text p {
+        margin-bottom: 1rem;
+    }
+}
