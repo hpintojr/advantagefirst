@@ -3,7 +3,6 @@
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import Link from 'next/link';
-import Script from 'next/script';
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
@@ -33,7 +32,8 @@ function ThankYouContent() {
           
           <img src="/ribbon.png" alt="" className="ty-ribbon" aria-hidden="true" />
           
-          <h2 id="ty-heading" class="ty-title">
+          {/* FIXED LINE BELOW: changed class to className */}
+          <h2 id="ty-heading" className="ty-title">
             Thank you, <span className="ty-name">{firstName}</span><span aria-hidden="true">!</span>
             <br /> Your application has been received.
           </h2>
@@ -69,7 +69,7 @@ function ThankYouContent() {
               title="Customer reviews powered by Trustpilot" 
               loading="lazy" 
               src="https://widget.trustpilot.com/trustboxes/5419b6ffb0d04a076446a9af/index.html?templateId=5419b6ffb0d04a076446a9af&businessunitId=64f10ba8d79983d2c4f6adc6#locale=en-US&styleHeight=20px&styleWidth=100%25&token=defec148-3bc6-4e24-8a6d-b4bf32aa54a8" 
-              style={{ position: 'relative', height: '20px', width: '100%', borderStyle: 'none', display: 'block', overflow: 'hidden' }}
+              style={{ position: 'relative', height: '240px', width: '100%', borderStyle: 'none', display: 'block', overflow: 'hidden' }}
             ></iframe>
           </div>
         </div>
