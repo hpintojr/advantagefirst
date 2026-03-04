@@ -3,18 +3,21 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
+import { useRouter } from 'next/navigation'; // 1. Import the router
 
 export default function Verify() {
+  const router = useRouter(); // 2. Initialize the router
   const [step, setStep] = useState(1);
   const [debtValue, setDebtValue] = useState(10000);
   const [sliderPosition, setSliderPosition] = useState(0);
+  
+  // State to capture the name for the redirect
+  const [firstName, setFirstName] = useState("");
 
-  // Handle Range Slider UI
   useEffect(() => {
     const min = 8000;
     const max = 100000;
     const percent = ((debtValue - min) / (max - min)) * 100;
-    // Calculation for the floating label position
     setSliderPosition(percent);
   }, [debtValue]);
 
@@ -23,9 +26,18 @@ export default function Verify() {
     window.scrollTo(0, 0);
   };
 
+  // 3. Create the submission handler
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // In a real app, you'd perform your API call here.
+    // After success, redirect to the thank you page with the name:
+    const queryName = firstName ? encodeURIComponent(firstName) : "Applicant";
+    router.push(`/thank-you?firstName=${queryName}`);
+  };
+
   return (
     <>
-      {/* Load External Scripts */}
       <Script src="//challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
       <Script src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" strategy="lazyOnload" />
 
@@ -33,7 +45,6 @@ export default function Verify() {
         <div className="verify-background">
           <div className="verify-container">
             <div className="verify-form">
-              {/* Progress Tracker */}
               <div className="progress-tracker">
                 <div className={`progress-step ${step === 1 ? 'active' : ''}`} data-phase="estimate">
                   <div className="step-connector"></div>
@@ -52,9 +63,9 @@ export default function Verify() {
                 </div>
               </div>
 
-              <form className="form-grid" id="CustomerForm">
+              {/* 4. Add the onSubmit handler here */}
+              <form className="form-grid" id="CustomerForm" onSubmit={handleSubmit}>
                 
-                {/* STEP 1: Debt Selection */}
                 {step === 1 && (
                   <div className="step-container active">
                     <h1 className="verify-title">Choose your debt amount</h1>
@@ -88,13 +99,19 @@ export default function Verify() {
                   </div>
                 )}
 
-                {/* STEP 2: Initial Personal Info */}
                 {step === 2 && (
                   <div className="step-container active">
                     <h1 className="verify-title">See your results</h1>
                     <div className="form-container-step4">
                       <div className="form-group full-width">
-                        <input className="form-control" placeholder="First Name" required name="FirstName" />
+                        <input 
+                          className="form-control" 
+                          placeholder="First Name" 
+                          required 
+                          name="FirstName" 
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)} // 5. Capture the name
+                        />
                       </div>
                       <div className="form-group full-width">
                         <input className="form-control" placeholder="Last Name" required name="LastName" />
@@ -106,14 +123,13 @@ export default function Verify() {
                         <input type="email" className="form-control" placeholder="Email" required name="Email" />
                       </div>
                       <p className="consent-disclaimer">
-                        By providing your phone number above and clicking on “See your results” below, you are consenting to receive calls, texts, and recorded messages...
+                        By providing your phone number above and clicking on “See your results” below...
                       </p>
                     </div>
                     <button type="button" className="btn-next" onClick={() => handleNext(3)}>See your results</button>
                   </div>
                 )}
 
-                {/* STEP 3: Verification Info */}
                 {step === 3 && (
                   <div className="step-container active">
                     <h1 className="verify-title">Verify Info</h1>
@@ -122,12 +138,13 @@ export default function Verify() {
                         <input type="date" className="form-control" placeholder="Date of Birth (mm/dd/yyyy)" required name="DOB" />
                       </div>
                       <p className="credit-consent-disclaimer">
-                        You understand that by clicking on the “Submit” button below, you are providing written instructions to Advantage First under the Fair Credit Reporting Act...
+                        You understand that by clicking on the “Submit” button below...
                       </p>
                     </div>
                     <div className="form-group full-width turnstile-container">
                       <div className="cf-turnstile" data-sitekey="0x4AAAAAACECTwiAne6oMlHd" data-theme="light"></div>
                     </div>
+                    {/* 6. This button triggers the onSubmit handler */}
                     <button type="submit" className="btn-submit-form" id="submit-verify">Submit</button>
                   </div>
                 )}
@@ -136,7 +153,6 @@ export default function Verify() {
           </div>
         </div>
 
-        {/* Trustpilot Bar */}
         <section className="trustpilot-bar">
           <div className="trustpilot-bar-container">
             <div 

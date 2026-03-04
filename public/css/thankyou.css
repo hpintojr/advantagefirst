@@ -1,0 +1,199 @@
+.ty-wrap {
+    position: relative;
+    background: url('/images/three-circles.png') no-repeat center center;
+    background-size: cover;
+    padding: 40px;
+}
+
+.ty-container {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.ty-ribbon {
+    display: block;
+    margin: 0 auto 20px;
+    max-width: 100px;
+}
+
+/* Progress tracker */
+.ty-progress {
+    margin-bottom: 20px;
+}
+
+.ty-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto 40px;
+    display: flex;
+    gap: 50px;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 450px;
+}
+
+.ty-steps::before {
+    content: "";
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    top: 10%;
+    height: 2px;
+    background: #0F75BC;
+    z-index: 0;
+}
+
+.ty-step {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #9fb6d6;
+    min-width: 80px;
+}
+
+.ty-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d7eaf9;
+    display: inline-block;
+    box-shadow: 0 0 0 4px rgba(215,234,249,0.6);
+}
+
+.ty-complete .ty-dot {
+    background: #0F75BC;
+    box-shadow: none;
+}
+
+.ty-active .ty-dot {
+    background: #0F75BC;
+    box-shadow: 0 0 0 6px rgba(15,117,188,0.08);
+}
+
+.ty-label {
+    margin-top: 4px;
+    font-weight: 600;
+    color: #0F75BC;
+}
+
+/* Main heading and copy */
+.ty-title {
+    font-size: 28px;
+    margin: 10px 0 20px;
+    color: #1D315F;
+    font-weight: 900;
+}
+
+.ty-sub {
+    margin: 0 0 20px;
+    font-size: 20px;
+    color: #1D315F;
+    line-height: 1.2;
+}
+
+.ty-area {
+    font-weight: 700;
+}
+
+/* Phone / assistance */
+.ty-assist {
+    margin-bottom: 5px;
+    font-size: 18px;
+    color: #0F75BC;
+    line-height: 1.5;
+}
+
+.ty-phone {
+    color: #0F75BC;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.ty-phone:focus,
+.ty-phone:hover {
+    text-decoration: underline;
+}
+
+/* ==========================================
+   SECTION 4: TRUSTPILOT BAR
+   ========================================== */
+
+.trustpilot-bar {
+    background-color: #f7f7f799;
+    padding: 1.5rem 2rem;
+}
+
+.trustpilot-bar-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.trustpilot-bar-container p {
+    color: #4a5568;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.trustpilot-bar-container strong {
+    color: #1D315F;
+    font-weight: 700;
+}
+
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+
+/* Responsive */
+@media only screen and (max-width: 768px) {
+    .ty-steps {
+        gap: 18px;
+        max-width: 300px;
+    }
+    
+    .ty-title {
+        font-size: 22px;
+    }
+    
+    .ty-sub {
+        font-size: 15px;
+    }
+    
+    .ty-assist {
+        font-size: 13px;
+    }
+
+    .ty-steps::before {
+        content: "";
+        position: absolute;
+        left: 18%;
+        right: 18%;
+        top: 10%;
+        height: 2px;
+        background: #0F75BC;
+        z-index: 0;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+
+    .mobile-only {
+        display: block;
+    }
+}
