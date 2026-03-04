@@ -24,6 +24,7 @@ export default function RootLayout({
       <head>
         <link rel="stylesheet" href="/css/site.css" />
         <link rel="stylesheet" href="/css/home.css" />
+		<link rel="stylesheet" href="/css/services.css" />
       </head>
       <body className={`${lato.className} antialiased main-content flex flex-col min-h-screen`}>
         {/* Global Header */}
