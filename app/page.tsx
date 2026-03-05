@@ -25,13 +25,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trustpilot Section */}
+      {/* Trustpilot Section - Moved Under Hero */}
       <section className="trustpilot-section">
         <div className="trustpilot-container">
           <div className="tp-cta-section">
             <div className="tp-cta-container">
-              <h2 className="trustpilot-heading">Transparent pricing and repayment terms</h2>
-              <p className="trustpilot-subheading">See why thousands of borrowers have chosen us:</p>
+              {/* Applied #1D315F color to match original theme */}
+              <h2 className="trustpilot-heading" style={{ color: '#1D315F' }}>
+                Transparent pricing and repayment terms
+              </h2>
+              <p className="trustpilot-subheading" style={{ color: '#1D315F' }}>
+                See why thousands of borrowers have chosen us:
+              </p>
               
               <div 
                 className="trustpilot-widget" 
@@ -60,7 +65,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Journey Section */}
+      {/* Journey Section - Separate section as per original code */}
       <section className="journey-section">
         <div className="journey-card">
           <div className="journey-card-content">
