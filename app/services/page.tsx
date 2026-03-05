@@ -1,11 +1,10 @@
-"use client"; // Required for using hooks like useEffect
+"use client"; 
 
 import { useEffect } from 'react';
 import Link from 'next/link';
-import Script from 'next/script';
 
 export default function Services() {
-  // Manual trigger for Trustpilot reload on page mount
+  // Trigger Trustpilot reload
   useEffect(() => {
     const trustpilot = (window as any).Trustpilot;
     if (trustpilot && trustpilot.loadFromElement) {
