@@ -185,14 +185,19 @@ export default function Verify() {
                   <div className="step-container active">
                     <h1 className="verify-title">Verify Info</h1>
                     <div className="form-container-step5">
-                      <div className="form-group full-width">
-                        <label style={{display: 'block', textAlign: 'left', marginBottom: '5px', fontWeight: 'bold', color: '#1D315F'}}>First Name</label>
-                        <input className="form-control" placeholder="First Name" required name="VerifyFirstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                      
+                      {/* Flex container to place First and Last Name side by side */}
+                      <div style={{ display: 'flex', gap: '15px', width: '100%' }}>
+                        <div className="form-group" style={{ flex: '1 1 50%' }}>
+                          <label style={{display: 'block', textAlign: 'left', marginBottom: '5px', fontWeight: 'bold', color: '#1D315F'}}>First Name</label>
+                          <input className="form-control" placeholder="First Name" required name="VerifyFirstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                        </div>
+                        <div className="form-group" style={{ flex: '1 1 50%' }}>
+                          <label style={{display: 'block', textAlign: 'left', marginBottom: '5px', fontWeight: 'bold', color: '#1D315F'}}>Last Name</label>
+                          <input className="form-control" placeholder="Last Name" required name="VerifyLastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                        </div>
                       </div>
-                      <div className="form-group full-width">
-                        <label style={{display: 'block', textAlign: 'left', marginBottom: '5px', fontWeight: 'bold', color: '#1D315F'}}>Last Name</label>
-                        <input className="form-control" placeholder="Last Name" required name="VerifyLastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-                      </div>
+
                       <div className="form-group full-width">
                         <label style={{display: 'block', textAlign: 'left', marginBottom: '5px', fontWeight: 'bold', color: '#1D315F'}}>Phone</label>
                         <input type="tel" className="form-control" placeholder="Phone" required name="VerifyPhone" value={phone} onChange={(e) => setPhone(e.target.value)} />
@@ -203,9 +208,9 @@ export default function Verify() {
                       </div>
 
                       <p className="credit-consent-disclaimer" style={{textAlign: 'left', fontSize: '13px', lineHeight: '1.5', marginTop: '15px', color: '#555'}}>
-                        You understand that by clicking on the "Submit" button below, you are providing written instructions to Advantage First under the Fair Credit Reporting Act authorizing Advantage First to obtain information from your personal credit report or other information from Experian, Transunion, and/or Equifax, solely for debt settlement and fraud prevention purposes.
+                        You understand that by clicking on the “Submit” button below, you are providing written instructions to Advantage First under the Fair Credit Reporting Act authorizing Advantage First to obtain information from your personal credit report or other information from Experian, Transunion, and/or Equifax, solely for debt settlement and fraud prevention purposes.
                         <br /><br />
-                        By clicking "Submit" you agree to the Spinwheel End User Agreement, Further, you are providing "written instructions" to Spinwheel Solutions, Inc. authorizing it to obtain your credit profile from any consumer reporting agency.
+                        By clicking “Submit” you agree to the Spinwheel <a href="https://legal.spinwheel.io/end-user-agreement/" target="_blank" rel="noopener noreferrer" style={{color: '#0f75bc', textDecoration: 'underline'}}>End User Agreement</a>. Further, you are providing “written instructions” to Spinwheel Solutions, Inc. authorizing it to obtain your credit profile from any consumer reporting agency. I consent to receive calls and SMS/text messages regarding my inquiry and pre-approval request. Reply STOP to opt out. Reply HELP for help. Msg &amp; data rates may apply. Message frequency varies. <Link href="/privacy" target="_blank" rel="noopener noreferrer" style={{color: '#0f75bc', textDecoration: 'underline'}}>View our Privacy Policy</Link>.
                       </p>
                     </div>
                     <div className="form-group full-width turnstile-container">
