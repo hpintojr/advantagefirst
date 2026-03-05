@@ -33,9 +33,6 @@ export async function POST(request: Request) {
       applicantDOB: body.dob,
       loanAmount: body.debtValue,
       leadSource: "Website",
-      // If Lead Owner is a custom field or standard field, map it here. 
-      // Typically, assignment rules handle this, but passing it explicitly if required:
-      OwnerId: "Web Inbound Leads", // Note: Salesforce usually requires an 18-character ID for OwnerId. Ensure your endpoint accepts text mapping for this.
     };
 
     // 3. Submit Lead to Salesforce
