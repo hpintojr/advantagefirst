@@ -144,7 +144,7 @@ export default function Verify() {
                         <input type="date" className="form-control" placeholder="Date of Birth (mm/dd/yyyy)" required name="DOB" />
                       </div>
                       <p className="credit-consent-disclaimer">
-                        You understand that by clicking on the “Submit” button below...
+                        You understand that by providing your information above and clicking on “Submit” below, I consent to receive calls and SMS/text, and email messages regarding my inquiry and pre-approval request. Reply STOP to opt out. Reply HELP for help. Msg &amp; data rates may apply. Message frequency varies. <Link href="/privacy" target="_blank" rel="noopener noreferrer">View our Privacy Policy</Link>.
                       </p>
                     </div>
                     <div className="form-group full-width turnstile-container">
