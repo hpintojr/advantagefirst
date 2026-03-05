@@ -4,17 +4,19 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Blog() {
+  // Manual trigger for Trustpilot reload on page mount
   useEffect(() => {
     const trustpilot = (window as any).Trustpilot;
     if (trustpilot && trustpilot.loadFromElement) {
       const widget = document.querySelector('.trustpilot-widget');
-      if (widget) trustpilot.loadFromElement(widget);
+      if (widget) {
+        trustpilot.loadFromElement(widget);
+      }
     }
   }, []);
 
   return (
     <>
-
       {/* Blog Hero Section */}
       <section className="blog-hero">
         <div className="blog-hero-container">
@@ -39,7 +41,6 @@ export default function Blog() {
           </p>
           
           <div className="blog-grid">
-            {/* Card 1 */}
             <div className="blog-card">
               <div className="blog-image">
                 <img src="/financial_success_img_DT.png" alt="Financial Success" className="blog-card-image" />
@@ -55,7 +56,6 @@ export default function Blog() {
               </div>
             </div>
 
-            {/* Card 2 */}
             <div className="blog-card">
               <div className="blog-image">
                 <img src="/empowering_lives_img_DT.png" alt="Empowering Lives" className="blog-card-image" />
