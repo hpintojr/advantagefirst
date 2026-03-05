@@ -167,9 +167,21 @@ body {
         display: none !important;
     }
 
-    /* Hide header actions on mobile */
-    .header-actions {
+    /* Hide only the Apply button, keep the phone number visible */
+    .header-actions .btn-primary {
         display: none;
+    }
+
+    /* Adjust flex positioning to keep phone number next to hamburger menu */
+    .header-actions {
+        display: flex;
+        margin-left: auto;
+        margin-right: 15px;
+    }
+
+    /* Reduce phone number size slightly to fit narrow screens */
+    .phone-number {
+        font-size: 16px;
     }
 }
 
