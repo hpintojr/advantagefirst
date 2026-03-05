@@ -3,16 +3,27 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
-import { useRouter } from 'next/navigation'; // 1. Import the router
+import { useRouter } from 'next/navigation';
 
 export default function Verify() {
-  const router = useRouter(); // 2. Initialize the router
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [debtValue, setDebtValue] = useState(10000);
   const [sliderPosition, setSliderPosition] = useState(0);
   
   // State to capture the name for the redirect
   const [firstName, setFirstName] = useState("");
+
+  // Manual trigger for Trustpilot reload on page mount
+  useEffect(() => {
+    const trustpilot = (window as any).Trustpilot;
+    if (trustpilot && trustpilot.loadFromElement) {
+      const widget = document.querySelector('.trustpilot-widget');
+      if (widget) {
+        trustpilot.loadFromElement(widget);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const min = 8000;
@@ -26,20 +37,16 @@ export default function Verify() {
     window.scrollTo(0, 0);
   };
 
-  // 3. Create the submission handler
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // In a real app, you'd perform your API call here.
-    // After success, redirect to the thank you page with the name:
     const queryName = firstName ? encodeURIComponent(firstName) : "Applicant";
     router.push(`/thank-you?firstName=${queryName}`);
   };
 
   return (
     <>
+      {/* Cloudflare Turnstile Script remains local to this page */}
       <Script src="//challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
-      <Script src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" strategy="lazyOnload" />
 
       <div className="padd-left">
         <div className="verify-background">
@@ -63,7 +70,6 @@ export default function Verify() {
                 </div>
               </div>
 
-              {/* 4. Add the onSubmit handler here */}
               <form className="form-grid" id="CustomerForm" onSubmit={handleSubmit}>
                 
                 {step === 1 && (
@@ -110,7 +116,7 @@ export default function Verify() {
                           required 
                           name="FirstName" 
                           value={firstName}
-                          onChange={(e) => setFirstName(e.target.value)} // 5. Capture the name
+                          onChange={(e) => setFirstName(e.target.value)}
                         />
                       </div>
                       <div className="form-group full-width">
@@ -144,7 +150,6 @@ export default function Verify() {
                     <div className="form-group full-width turnstile-container">
                       <div className="cf-turnstile" data-sitekey="0x4AAAAAACECTwiAne6oMlHd" data-theme="light"></div>
                     </div>
-                    {/* 6. This button triggers the onSubmit handler */}
                     <button type="submit" className="btn-submit-form" id="submit-verify">Submit</button>
                   </div>
                 )}
@@ -153,6 +158,7 @@ export default function Verify() {
           </div>
         </div>
 
+        {/* Updated Trustpilot Bar Section to match Services Page */}
         <section className="trustpilot-bar">
           <div className="trustpilot-bar-container">
             <div 
@@ -164,7 +170,9 @@ export default function Verify() {
               data-style-width="100%" 
               data-token="defec148-3bc6-4e24-8a6d-b4bf32aa54a8"
             >
-              <Link href="https://www.trustpilot.com/review/adv1st.com" target="_blank" rel="noopener">Trustpilot</Link>
+              <a href="//www.trustpilot.com/review/adv1st.com" target="_blank" rel="noopener noreferrer">
+                Trustpilot
+              </a>
             </div>
           </div>
         </section>
