@@ -10,11 +10,8 @@ export default function Verify() {
   const [step, setStep] = useState(1);
   const [debtValue, setDebtValue] = useState(10000);
   const [sliderPosition, setSliderPosition] = useState(0);
-  
-  // State to capture the name for the redirect
   const [firstName, setFirstName] = useState("");
 
-  // Manual trigger for Trustpilot reload on page mount
   useEffect(() => {
     const trustpilot = (window as any).Trustpilot;
     if (trustpilot && trustpilot.loadFromElement) {
@@ -37,15 +34,35 @@ export default function Verify() {
     window.scrollTo(0, 0);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
+    // Extract form data using best practice
+    const formData = new FormData(e.currentTarget);
+    const payload = {
+      firstName: formData.get('FirstName'),
+      lastName: formData.get('LastName'),
+      phone: formData.get('Phone'),
+      email: formData.get('Email'),
+      dob: formData.get('DOB'),
+      debtValue: debtValue
+    };
+
+    // Fire and forget: send to backend without waiting, keepalive ensures completion
+    fetch('/api/submit-lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      keepalive: true
+    });
+
+    // Send user to thank you page ASAP
     const queryName = firstName ? encodeURIComponent(firstName) : "Applicant";
     router.push(`/thank-you?firstName=${queryName}`);
   };
 
   return (
     <>
-      {/* Cloudflare Turnstile Script remains local to this page */}
       <Script src="//challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
 
       <div className="padd-left">
@@ -158,7 +175,6 @@ export default function Verify() {
           </div>
         </div>
 
-        {/* Updated Trustpilot Bar Section to match Services Page */}
         <section className="trustpilot-bar">
           <div className="trustpilot-bar-container">
             <div 
