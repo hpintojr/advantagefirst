@@ -129,7 +129,7 @@ export default function Verify() {
                         <input type="email" className="form-control" placeholder="Email" required name="Email" />
                       </div>
                       <p className="consent-disclaimer">
-                        By providing your phone number above and clicking on “See your results” below...
+                        By providing your phone number above and clicking on “See your results” below, I consent to receive calls and SMS/text messages regarding my inquiry and pre-approval request. Reply STOP to opt out. Reply HELP for help. Msg &amp; data rates may apply. Message frequency varies. <Link href="/privacy" target="_blank" rel="noopener noreferrer">View our Privacy Policy</Link>.
                       </p>
                     </div>
                     <button type="button" className="btn-next" onClick={() => handleNext(3)}>See your results</button>

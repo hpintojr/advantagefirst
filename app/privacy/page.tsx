@@ -51,6 +51,13 @@ export default function PrivacyPage() {
         </section>
 
         <section className="privacy-section">
+          <h2>We do not sell your personal information disclosure</h2>
+          <p>
+            We do not sell your personal information. We only share information with service providers that help us operate our website and deliver services (e.g., hosting, analytics, and messaging), or when required by law.
+          </p>
+        </section>
+
+        <section className="privacy-section">
           <h2>Your California Privacy Rights</h2>
           <p>
             As a California resident you have certain rights regarding your personal information under the California Consumer Privacy Act (CCPA), to the extent your data is not exempt under the Gramm-Leach-Bliley Act (GLBA). These rights include:
@@ -72,6 +79,7 @@ export default function PrivacyPage() {
 
         <section className="privacy-section">
           <p><strong>SMS Terms &amp; Conditions:</strong> By subscribing to Advantage First, LLC SMS services, you agree to receive text messages from us. Advantage First, LLC will send SMS messages to communicate with customers on the status of the projects they have requested to provide a better overall customer experience. For HELP, please contact us at (800) 344 1202. To opt out of receiving messages, reply with "STOP" at any time. Message frequency may vary. Standard message and data rates may apply.</p>
+          <p><strong>By providing my phone number, I consent to receive calls and SMS/text messages regarding my inquiry and pre-approval request. Reply STOP to opt out. Reply HELP for help. Msg &amp; data rates may apply. Message frequency varies. View our <Link href="/privacy">Privacy Policy</Link>.</strong></p>
           <p>The categories mentioned above exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.</p>
           <p>1) Text / SMS Marketing</p>
           <p>If you choose to opt in to SMS communications from Advantage First Financial, LLC, you will receive text messages at the mobile number you provide.</p>
