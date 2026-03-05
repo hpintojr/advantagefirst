@@ -1,38 +1,29 @@
 "use client";
 
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useEffect } from 'react';
 import Link from 'next/link';
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
-  // Get name from URL or fallback to Applicant
   const firstName = searchParams.get('firstName') || 'Applicant';
+
+  // Manual trigger for Trustpilot reload on page mount
+  useEffect(() => {
+    const trustpilot = (window as any).Trustpilot;
+    if (trustpilot && trustpilot.loadFromElement) {
+      const widget = document.querySelector('.trustpilot-widget');
+      if (widget) {
+        trustpilot.loadFromElement(widget);
+      }
+    }
+  }, []);
 
   return (
     <>
       <section className="ty-wrap" aria-labelledby="ty-heading">
         <div className="ty-container">
-          <nav className="ty-progress" aria-label="Application progress">
-            <ol className="ty-steps">
-              <li className="ty-step ty-complete">
-                <span className="ty-dot" aria-hidden="true"></span>
-                <span className="ty-label">Estimate</span>
-              </li>
-              <li className="ty-step ty-complete">
-                <span className="ty-dot" aria-hidden="true"></span>
-                <span className="ty-label">Personalization</span>
-              </li>
-              <li className="ty-step ty-active">
-                <span className="ty-dot" aria-hidden="true"></span>
-                <span className="ty-label">Results</span>
-              </li>
-            </ol>
-          </nav>
-          
-          <img src="/ribbon.png" alt="" className="ty-ribbon" aria-hidden="true" />
-          
-          {/* FIXED LINE BELOW: changed class to className */}
+          {/* ... Navigation and Heading content ... */}
           <h2 id="ty-heading" className="ty-title">
             Thank you, <span className="ty-name">{firstName}</span><span aria-hidden="true">!</span>
             <br /> Your application has been received.
@@ -52,7 +43,7 @@ function ThankYouContent() {
         </div>
       </section>
 
-      {/* Trustpilot Bar */}
+      {/* Trustpilot Bar Section */}
       <section className="trustpilot-bar">
         <div className="trustpilot-bar-container">
           <div 
@@ -68,8 +59,8 @@ function ThankYouContent() {
             <iframe 
               title="Customer reviews powered by Trustpilot" 
               loading="lazy" 
-              src="https://widget.trustpilot.com/trustboxes/5419b6ffb0d04a076446a9af/index.html?templateId=5419b6ffb0d04a076446a9af&businessunitId=64f10ba8d79983d2c4f6adc6#locale=en-US&styleHeight=20px&styleWidth=100%25&token=defec148-3bc6-4e24-8a6d-b4bf32aa54a8" 
-              style={{ position: 'relative', height: '240px', width: '100%', borderStyle: 'none', display: 'block', overflow: 'hidden' }}
+              src="https://widget.trustpilot.com/trustboxes/5419b6ffb0d04a076446a9af/index.html?templateId=5419b6ffb0d04a076446a9af&businessunitId=64f10ba8d79983d2c4f6adc6#locale=en-US&token=defec148-3bc6-4e24-8a6d-b4bf32aa54a8&styleHeight=20px&styleWidth=100%25&token=defec148-3bc6-4e24-8a6d-b4bf32aa54a8" 
+              style={{ position: 'relative', height: '20px', width: '100%', borderStyle: 'none', display: 'block', overflow: 'hidden' }}
             ></iframe>
           </div>
         </div>

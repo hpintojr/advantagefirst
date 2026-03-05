@@ -1,10 +1,23 @@
+"use client"; // Required for using hooks like useEffect
+
+import { useEffect } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
 
 export default function Services() {
+  // Manual trigger for Trustpilot reload on page mount
+  useEffect(() => {
+    const trustpilot = (window as any).Trustpilot;
+    if (trustpilot && trustpilot.loadFromElement) {
+      const widget = document.querySelector('.trustpilot-widget');
+      if (widget) {
+        trustpilot.loadFromElement(widget);
+      }
+    }
+  }, []);
+
   return (
     <>
-      {/* Load Trustpilot Widget Script */}
       <Script src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" strategy="lazyOnload" />
 
       {/* Services Hero Section */}
@@ -83,7 +96,7 @@ export default function Services() {
         </div>
       </section>
 
-      {/* Trustpilot Bar */}
+      {/* Trustpilot Bar Section */}
       <section className="trustpilot-bar">
         <div className="trustpilot-bar-container">
           <div 
