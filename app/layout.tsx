@@ -16,11 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Load Original Fonts from Bunny Fonts to fix spacing issues */}
+        {/* Load Original Fonts from Bunny Fonts to fix spacing and weights */}
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link href="https://fonts.bunny.net/css?family=source-sans-pro:200,300,400,600,700,900|lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet" />
         
-        {/* Global Stylesheets */}
+        {/* Load Original Stylesheets */}
         <link rel="stylesheet" href="/css/site.css" />
         <link rel="stylesheet" href="/css/home.css" />
         <link rel="stylesheet" href="/css/services.css" />
@@ -31,7 +31,10 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>
       <body className="antialiased main-content flex flex-col min-h-screen">
-        {/* Central Trustpilot Script */}
+        {/* Load site logic for hamburger menu toggle */}
+        <Script src="/js/site.js" strategy="afterInteractive" />
+        
+        {/* Global Trustpilot Script */}
         <Script 
           src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" 
           strategy="afterInteractive" 
@@ -42,6 +45,7 @@ export default function RootLayout({
             <Link href="/" className="logo">
               <img src="/DT_Logo.png" alt="Advantage First Financial" />
             </Link>
+            
             <nav className="main-nav">
               <ul>
                 <li><Link href="/">Home</Link></li>
@@ -50,13 +54,26 @@ export default function RootLayout({
                 <li><Link href="/blog">Blog</Link></li>
               </ul>
             </nav>
+            
             <div className="header-actions">
               <a href="tel:800-344-1202" className="phone-number">800-344-1202</a>
               <Link href="/verify" className="btn-primary">Apply Now</Link>
             </div>
-            <button className="hamburger">
+            
+            {/* ADDED ID: "hamburger" for site.js to target */}
+            <button className="hamburger" id="hamburger" aria-label="Menu">
               <span></span><span></span><span></span>
             </button>
+          </div>
+
+          {/* ADDED: Mobile Navigation Menu for site.js to toggle */}
+          <div className="mobile-nav" id="mobileNav">
+            <ul>
+              <li><Link href="/">Home</Link></li>
+              <li><Link href="/services">Services</Link></li>
+              <li><Link href="/verify">Apply Now</Link></li>
+              <li><Link href="/blog">Blog</Link></li>
+            </ul>
           </div>
         </header>
 
