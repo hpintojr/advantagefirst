@@ -4,15 +4,25 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Home() {
-  // Triggers Trustpilot to find and load the widget on every page visit
   useEffect(() => {
-    const trustpilot = (window as any).Trustpilot;
-    if (trustpilot && trustpilot.loadFromElement) {
-      const widget = document.querySelector('.trustpilot-widget');
-      if (widget) {
-        trustpilot.loadFromElement(widget);
+    // 1. Define the loading function
+    const loadTrustpilot = () => {
+      const tp = (window as any).Trustpilot;
+      if (tp && tp.loadFromElement) {
+        const container = document.querySelector('.trustpilot-widget');
+        if (container) {
+          tp.loadFromElement(container);
+        }
       }
-    }
+    };
+
+    // 2. Try to load immediately
+    loadTrustpilot();
+
+    // 3. Also try again after a short delay to account for script loading
+    const timer = setTimeout(loadTrustpilot, 500);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   return (

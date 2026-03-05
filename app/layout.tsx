@@ -33,9 +33,9 @@ export default function RootLayout({
       {/* Removed font optimization class to fix CSS font spacing issues */}
       <body className="antialiased main-content flex flex-col min-h-screen">
         <Script 
-          src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" 
-          strategy="afterInteractive" 
-        />
+  src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" 
+  strategy="afterInteractive" 
+/>
 
         <header className="site-header">
           <div className="header-container">
