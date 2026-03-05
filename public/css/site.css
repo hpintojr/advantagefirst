@@ -167,22 +167,20 @@ body {
         display: none !important;
     }
 
-    /* Hide only the Apply button, keep the phone number visible */
-    .header-actions .btn-primary {
+    /* Hide header actions (phone number and apply button) on top mobile view */
+    .header-actions {
         display: none;
     }
+}
 
-    /* Adjust flex positioning to keep phone number next to hamburger menu */
-    .header-actions {
-        display: flex;
-        margin-left: auto;
-        margin-right: 15px;
-    }
+/* Style for the phone number inside the mobile dropdown */
+.mobile-phone-link {
+    font-weight: bold;
+    color: #D9312E !important;
+}
 
-    /* Reduce phone number size slightly to fit narrow screens */
-    .phone-number {
-        font-size: 16px;
-    }
+.mobile-phone-link i {
+    margin-right: 8px;
 }
 
 /* Desktop Styles - Make sure hamburger is hidden */

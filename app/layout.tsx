@@ -73,6 +73,7 @@ export default function RootLayout({
               <li><Link href="/services">Services</Link></li>
               <li><Link href="/verify">Apply Now</Link></li>
               <li><Link href="/blog">Blog</Link></li>
+              <li><a href="tel:800-344-1202" className="mobile-phone-link"><i className="fas fa-phone"></i> 800-344-1202</a></li>
             </ul>
           </div>
         </header>
