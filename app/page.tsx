@@ -1,6 +1,20 @@
+"use client"; // Required for using hooks like useEffect
+
+import { useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Home() {
+  // Manual trigger for Trustpilot reload on page mount
+  useEffect(() => {
+    const trustpilot = (window as any).Trustpilot;
+    if (trustpilot && trustpilot.loadFromElement) {
+      const widget = document.querySelector('.trustpilot-widget');
+      if (widget) {
+        trustpilot.loadFromElement(widget);
+      }
+    }
+  }, []);
+
   return (
     <>
       {/* Hero Section */}
@@ -25,12 +39,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trustpilot Section - Moved Under Hero */}
+      {/* Trustpilot Section */}
       <section className="trustpilot-section">
         <div className="trustpilot-container">
           <div className="tp-cta-section">
             <div className="tp-cta-container">
-              {/* Applied #1D315F color to match original theme */}
               <h2 className="trustpilot-heading" style={{ color: '#1D315F' }}>
                 Transparent pricing and repayment terms
               </h2>
