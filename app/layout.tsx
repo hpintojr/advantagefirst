@@ -1,13 +1,6 @@
 import type { Metadata } from "next";
-import { Lato } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
-
-const lato = Lato({
-  weight: ['100', '300', '400', '700', '900'],
-  subsets: ["latin"],
-  variable: "--font-lato",
-});
 
 export const metadata: Metadata = {
   title: "Advantage First Financial: Tailored Loan Solutions",
@@ -22,23 +15,29 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Load Original Fonts from Bunny Fonts */}
+        <link rel="preconnect" href="https://fonts.bunny.net" />
+        <link href="https://fonts.bunny.net/css?family=source-sans-pro:200,300,400,600,700,900|lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet" />
+        
+        {/* Load Original Stylesheets */}
         <link rel="stylesheet" href="/css/site.css" />
         <link rel="stylesheet" href="/css/home.css" />
-		<link rel="stylesheet" href="/css/services.css" />
-		<link rel="stylesheet" href="/css/blog.css" />
-		<link rel="stylesheet" href="/css/verify.css" />
-		<link rel="stylesheet" href="/css/thankyou.css" />
-		<link rel="stylesheet" href="/css/privacy.css" />
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+        <link rel="stylesheet" href="/css/services.css" />
+        <link rel="stylesheet" href="/css/blog.css" />
+        <link rel="stylesheet" href="/css/verify.css" />
+        <link rel="stylesheet" href="/css/thankyou.css" />
+        <link rel="stylesheet" href="/css/privacy.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>
-      <body className={`${lato.className} antialiased main-content flex flex-col min-h-screen`}>
-        {/* Global Header */}
+      {/* Removed lato.className. Added 'main-content' class. 
+         Next.js font optimization was breaking the CSS selectors.
+      */}
+      <body className="antialiased main-content flex flex-col min-h-screen">
         <header className="site-header">
           <div className="header-container">
             <Link href="/" className="logo">
               <img src="/DT_Logo.png" alt="Advantage First Financial" />
             </Link>
-            
             <nav className="main-nav">
               <ul>
                 <li><Link href="/">Home</Link></li>
@@ -47,20 +46,16 @@ export default function RootLayout({
                 <li><Link href="/blog">Blog</Link></li>
               </ul>
             </nav>
-            
             <div className="header-actions">
               <a href="tel:800-344-1202" className="phone-number">800-344-1202</a>
               <Link href="/verify" className="btn-primary">Apply Now</Link>
             </div>
-            
-            {/* Mobile Hamburger */}
             <button className="hamburger">
               <span></span><span></span><span></span>
             </button>
           </div>
         </header>
 
-        {/* Page Content */}
         <main className="flex-grow">
           {children}
         </main>

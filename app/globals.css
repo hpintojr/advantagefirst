@@ -1,26 +1,16 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* Ensure the body uses the fonts loaded in layout.tsx */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'lato', sans-serif;
+  font-size: 15px;
+  line-height: 1.5; /* Or whatever the original site uses */
+  margin: 0;
+  padding: 0;
+}
+
+/* Force headers to use Lato if Tailwind reset them */
+h1, h2, h3, h4, h5, h6, p {
+  font-family: 'lato', sans-serif;
+  margin-bottom: 1rem;
 }
