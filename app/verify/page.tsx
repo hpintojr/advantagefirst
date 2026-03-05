@@ -175,7 +175,7 @@ export default function Verify() {
                       </div>
                       
                       {/* Third Party Disclosure */}
-                      <p style={{textAlign: 'center', fontSize: '10px', fontWeight: '600', color: '#1D315F', marginTop: '10px', marginBottom: '5px'}}>
+                      <p style={{textAlign: 'left', fontSize: '10px', fontWeight: '600', color: '#1D315F', marginTop: '10px', marginBottom: '5px'}}>
                         <i className="fas fa-shield-alt" style={{marginRight: '6px', color: '#28a745'}}></i> 
                         Your personal information is secure and will not be shared with third parties. By providing your phone number above and clicking on “See your results” below, I consent to receive calls and SMS/text messages regarding my inquiry and pre-approval request. Reply STOP to opt out. Reply HELP for help. Msg &amp; data rates may apply. Message frequency varies. <Link href="/privacy" target="_blank" rel="noopener noreferrer">View our Privacy Policy</Link>.
                       </p>
