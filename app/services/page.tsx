@@ -1,23 +1,19 @@
-"use client"; 
+"use client";
 
 import { useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Services() {
-  // Trigger Trustpilot reload
   useEffect(() => {
     const trustpilot = (window as any).Trustpilot;
     if (trustpilot && trustpilot.loadFromElement) {
       const widget = document.querySelector('.trustpilot-widget');
-      if (widget) {
-        trustpilot.loadFromElement(widget);
-      }
+      if (widget) trustpilot.loadFromElement(widget);
     }
   }, []);
 
   return (
     <>
-      <Script src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" strategy="lazyOnload" />
 
       {/* Services Hero Section */}
       <section className="services-hero">

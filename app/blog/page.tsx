@@ -1,24 +1,19 @@
-"use client"; // Required for hooks
+"use client";
 
 import { useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Blog() {
-  // Triggers Trustpilot reload when you navigate to the Blog page
   useEffect(() => {
     const trustpilot = (window as any).Trustpilot;
     if (trustpilot && trustpilot.loadFromElement) {
       const widget = document.querySelector('.trustpilot-widget');
-      if (widget) {
-        trustpilot.loadFromElement(widget);
-      }
+      if (widget) trustpilot.loadFromElement(widget);
     }
   }, []);
 
   return (
     <>
-      {/* Load Trustpilot Widget Script */}
-      <Script src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" strategy="lazyOnload" />
 
       {/* Blog Hero Section */}
       <section className="blog-hero">

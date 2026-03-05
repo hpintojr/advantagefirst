@@ -1,17 +1,14 @@
-"use client"; // Required for hooks
+"use client"; // Required for Trustpilot trigger
 
 import { useEffect } from 'react';
 import Link from 'next/link';
 
 export default function Home() {
-  // Trigger Trustpilot to find and load the widget on this page
   useEffect(() => {
     const trustpilot = (window as any).Trustpilot;
     if (trustpilot && trustpilot.loadFromElement) {
       const widget = document.querySelector('.trustpilot-widget');
-      if (widget) {
-        trustpilot.loadFromElement(widget);
-      }
+      if (widget) trustpilot.loadFromElement(widget);
     }
   }, []);
 
