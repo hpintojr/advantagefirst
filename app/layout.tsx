@@ -16,11 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Load Fonts directly so CSS selectors like font-family: 'lato' work */}
+        {/* Load Original Fonts from Bunny Fonts to fix spacing issues */}
         <link rel="preconnect" href="https://fonts.bunny.net" />
         <link href="https://fonts.bunny.net/css?family=source-sans-pro:200,300,400,600,700,900|lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet" />
         
-        {/* Load Original Stylesheets */}
+        {/* Global Stylesheets */}
         <link rel="stylesheet" href="/css/site.css" />
         <link rel="stylesheet" href="/css/home.css" />
         <link rel="stylesheet" href="/css/services.css" />
@@ -30,12 +30,12 @@ export default function RootLayout({
         <link rel="stylesheet" href="/css/privacy.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>
-      {/* Removed font optimization class to fix CSS font spacing issues */}
       <body className="antialiased main-content flex flex-col min-h-screen">
+        {/* Central Trustpilot Script */}
         <Script 
-  src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" 
-  strategy="afterInteractive" 
-/>
+          src="//widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" 
+          strategy="afterInteractive" 
+        />
 
         <header className="site-header">
           <div className="header-container">
