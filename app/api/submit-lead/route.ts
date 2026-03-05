@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       firstName: body.firstName,
       lastName: body.lastName,
       email: body.email,
-      mobilePhone: body.phone,
+      phone: body.phone,
       applicantDOB: body.dob,
       loanAmount: body.debtValue,
       leadSource: "Website",
