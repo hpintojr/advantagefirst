@@ -1,6 +1,6 @@
 .ty-wrap {
     position: relative;
-    background: url('/images/three-circles.png') no-repeat center center;
+    background: url('/three-circles.png') no-repeat center center;
     background-size: cover;
     padding: 40px;
 }

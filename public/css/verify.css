@@ -523,7 +523,7 @@ select.error {
     right: 20px;
     top: 50px; 
     transform: translateY(-50%); 
-    background-image: url('../images/dropdown_arrow.png');
+    background-image: url('../dropdown_arrow.png');
     background-size: contain;
     background-repeat: no-repeat;
     pointer-events: none;
