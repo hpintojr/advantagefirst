@@ -10,7 +10,13 @@ export default function Verify() {
   const [step, setStep] = useState(1);
   const [debtValue, setDebtValue] = useState(10000);
   const [sliderPosition, setSliderPosition] = useState(0);
+  
+  // Controlled inputs for data persistence across steps
   const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [dob, setDob] = useState("");
 
   useEffect(() => {
     const trustpilot = (window as any).Trustpilot;
@@ -37,15 +43,14 @@ export default function Verify() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    // Extract form data using best practice
-    const formData = new FormData(e.currentTarget);
+    // Group our controlled state variables to send to the CRM
     const payload = {
-      firstName: formData.get('FirstName'),
-      lastName: formData.get('LastName'),
-      phone: formData.get('Phone'),
-      email: formData.get('Email'),
-      dob: formData.get('DOB'),
-      debtValue: debtValue
+      firstName,
+      lastName,
+      phone,
+      email,
+      dob,
+      debtValue
     };
 
     // Fire and forget: send to backend without waiting, keepalive ensures completion
@@ -137,13 +142,36 @@ export default function Verify() {
                         />
                       </div>
                       <div className="form-group full-width">
-                        <input className="form-control" placeholder="Last Name" required name="LastName" />
+                        <input 
+                          className="form-control" 
+                          placeholder="Last Name" 
+                          required 
+                          name="LastName" 
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                        />
                       </div>
                       <div className="form-group full-width">
-                        <input type="tel" className="form-control" placeholder="Phone" required name="Phone" />
+                        <input 
+                          type="tel" 
+                          className="form-control" 
+                          placeholder="Phone" 
+                          required 
+                          name="Phone" 
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                        />
                       </div>
                       <div className="form-group full-width">
-                        <input type="email" className="form-control" placeholder="Email" required name="Email" />
+                        <input 
+                          type="email" 
+                          className="form-control" 
+                          placeholder="Email" 
+                          required 
+                          name="Email" 
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                        />
                       </div>
                       <p className="consent-disclaimer">
                         By providing your phone number above and clicking on “See your results” below, I consent to receive calls and SMS/text messages regarding my inquiry and pre-approval request. Reply STOP to opt out. Reply HELP for help. Msg &amp; data rates may apply. Message frequency varies. <Link href="/privacy" target="_blank" rel="noopener noreferrer">View our Privacy Policy</Link>.
@@ -158,10 +186,26 @@ export default function Verify() {
                     <h1 className="verify-title">Verify Info</h1>
                     <div className="form-container-step5">
                       <div className="form-group full-width">
-                        <input type="date" className="form-control" placeholder="Date of Birth (mm/dd/yyyy)" required name="DOB" />
+                        <label style={{display: 'block', textAlign: 'left', marginBottom: '5px', fontWeight: 'bold', color: '#1D315F'}}>First Name</label>
+                        <input className="form-control" placeholder="First Name" required name="VerifyFirstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
                       </div>
-                      <p className="credit-consent-disclaimer">
-                        You understand that by providing your information above and clicking on “Submit” below, I consent to receive calls and SMS/text, and email messages regarding my inquiry and pre-approval request. Reply STOP to opt out. Reply HELP for help. Msg &amp; data rates may apply. Message frequency varies. <Link href="/privacy" target="_blank" rel="noopener noreferrer">View our Privacy Policy</Link>.
+                      <div className="form-group full-width">
+                        <label style={{display: 'block', textAlign: 'left', marginBottom: '5px', fontWeight: 'bold', color: '#1D315F'}}>Last Name</label>
+                        <input className="form-control" placeholder="Last Name" required name="VerifyLastName" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                      </div>
+                      <div className="form-group full-width">
+                        <label style={{display: 'block', textAlign: 'left', marginBottom: '5px', fontWeight: 'bold', color: '#1D315F'}}>Phone</label>
+                        <input type="tel" className="form-control" placeholder="Phone" required name="VerifyPhone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                      </div>
+                      <div className="form-group full-width">
+                        <label style={{display: 'block', textAlign: 'left', marginBottom: '5px', fontWeight: 'bold', color: '#1D315F'}}>Date of Birth</label>
+                        <input type="date" className="form-control" placeholder="Date of Birth (mm/dd/yyyy)" required name="DOB" value={dob} onChange={(e) => setDob(e.target.value)} />
+                      </div>
+
+                      <p className="credit-consent-disclaimer" style={{textAlign: 'left', fontSize: '13px', lineHeight: '1.5', marginTop: '15px', color: '#555'}}>
+                        You understand that by clicking on the "Submit" button below, you are providing written instructions to Advantage First under the Fair Credit Reporting Act authorizing Advantage First to obtain information from your personal credit report or other information from Experian, Transunion, and/or Equifax, solely for debt settlement and fraud prevention purposes.
+                        <br /><br />
+                        By clicking "Submit" you agree to the Spinwheel End User Agreement, Further, you are providing "written instructions" to Spinwheel Solutions, Inc. authorizing it to obtain your credit profile from any consumer reporting agency.
                       </p>
                     </div>
                     <div className="form-group full-width turnstile-container">
