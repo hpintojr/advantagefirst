@@ -108,7 +108,7 @@ export default function RootLayout({
                     <h4>Legal</h4>
                     <ul>
                       <li><Link href="/privacy">Privacy Policy</Link></li>
-                      <li><Link href="/terms">Terms &amp; Conditions</Link></li>
+                      <li><Link href="/terms-of-use">Terms &amp; Conditions</Link></li>
                     </ul>
                   </div>
                   <div className="footer-column">
