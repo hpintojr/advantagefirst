@@ -1,0 +1,115 @@
+/* public/css/terms.css */
+
+/* Main Page Layout */
+.terms-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    background-color: #ffffff;
+    min-height: 100vh;
+}
+
+.terms-content {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Headings */
+.terms-content h1 {
+    color: #0F75BC;
+    font-size: 2.2rem;
+    font-weight: 700;
+    padding-bottom: 1.5rem;
+    font-family: 'lato', sans-serif;
+}
+
+.terms-section h2 {
+    color: #1e2749;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-family: 'lato', sans-serif;
+}
+
+.terms-section h3 {
+    color: #1e2749;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-family: 'lato', sans-serif;
+}
+
+/* Font Spacing and Typography */
+.terms-section p {
+    font-size: 16px;
+    line-height: 26px;
+    color: #444;
+    margin-bottom: 20px;
+    font-family: 'lato', sans-serif;
+}
+
+.terms-section ul,
+.terms-section ol {
+    margin: 1rem 0 1.5rem 1.5rem;
+    color: #444;
+}
+
+.terms-section li {
+    margin-bottom: 0.75rem;
+    line-height: 24px;
+    font-size: 16px;
+    font-family: 'lato', sans-serif;
+}
+
+/* Links and Interactive Elements */
+.terms-section a {
+    color: #0F75BC;
+    text-decoration: underline;
+    transition: color 0.3s;
+}
+
+.terms-section a:hover {
+    color: #0a5a92;
+}
+
+.terms-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+}
+
+.terms-footer-links a {
+    color: #0F75BC;
+    background: #f8fafc;
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.terms-footer-links a:hover {
+    background: #0F75BC;
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .terms-container {
+        padding: 30px 15px;
+    }
+
+    .terms-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .terms-section h2 {
+        font-size: 1.3rem;
+    }
+}

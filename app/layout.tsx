@@ -28,6 +28,7 @@ export default function RootLayout({
         <link rel="stylesheet" href="/css/verify.css" />
         <link rel="stylesheet" href="/css/thankyou.css" />
         <link rel="stylesheet" href="/css/privacy.css" />
+        <link rel="stylesheet" href="/css/terms.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>
       <body className="antialiased main-content flex flex-col min-h-screen">
@@ -107,6 +108,7 @@ export default function RootLayout({
                     <h4>Legal</h4>
                     <ul>
                       <li><Link href="/privacy">Privacy Policy</Link></li>
+                      <li><Link href="/terms">Terms &amp; Conditions</Link></li>
                     </ul>
                   </div>
                   <div className="footer-column">
