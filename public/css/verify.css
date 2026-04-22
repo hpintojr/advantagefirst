@@ -722,6 +722,64 @@ select.error {
     padding: 0 10px;
 }
 
+/* ==========================================
+   TCPA OPT-IN CONSENT CHECKBOXES
+   Affirmative opt-in for SMS and calls.
+   Checkboxes are intentionally NOT required —
+   consent cannot be a condition of service.
+   ========================================== */
+
+.consent-checkboxes {
+    margin: 15px auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 14px;
+    background-color: #F7FAFD;
+    border: 1px solid #D6E4F2;
+    border-radius: 6px;
+}
+
+.consent-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 11px;
+    line-height: 1.5;
+    color: #1D315F;
+    text-align: left;
+    margin: 0;
+}
+
+.consent-checkbox {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: #0F75BC;
+}
+
+.consent-checkbox-label span {
+    flex: 1;
+}
+
+.consent-checkbox-label a {
+    color: #0F75BC;
+    text-decoration: underline;
+}
+
+.consent-checkbox-label a:hover {
+    text-decoration: none;
+}
+
+.consent-checkbox-label strong {
+    color: #1D315F;
+    font-weight: 700;
+}
+
 /* Button styling for step 5 */
 .step-container[data-step="4"] .btn-next {
     margin-top: 10px;
@@ -934,6 +992,22 @@ label[for='LoanAmount'] {
 
     .mobile-only {
         display: inline;
+    }
+
+    /* Consent checkboxes — slightly smaller on mobile */
+    .consent-checkboxes {
+        padding: 10px 12px;
+        gap: 14px;
+    }
+
+    .consent-checkbox-label {
+        font-size: 11px;
+        line-height: 1.45;
+    }
+
+    .consent-checkbox {
+        width: 20px;
+        height: 20px;
     }
 
 }
