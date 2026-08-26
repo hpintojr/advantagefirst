@@ -1,58 +1,68 @@
-import { NextResponse } from 'next/server';
+/**
+ * POST /api/submit-lead
+ * 
+ * Receives lead data from the SavingsEstimator calculator,
+ * then routes it to all enabled backends via the multi-pipe router.
+ * 
+ * API keys and connection strings never touch the client — they stay
+ * server-side in backendconnect.ts.
+ */
 
-export async function POST(request: Request) {
+import { NextRequest, NextResponse } from 'next/server';
+import { LeadData, SubmitResponse } from '@/lib/leadTypes';
+import { routeLeadToBackends } from '@/lib/backends';
+
+export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // 1. Authenticate with Salesforce
-    const authParams = new URLSearchParams({
-      grant_type: 'client_credentials',
-      client_id: process.env.SALESFORCE_CLIENT_ID!,
-      client_secret: process.env.SALESFORCE_CLIENT_SECRET!
-    });
+    // Validate required fields
+    const required = ['fullName', 'phone', 'email', 'state', 'loanAmount', 'loanTerm'];
+    const missing = required.filter((field) => !body[field] && body[field] !== 0);
 
-    const authResponse = await fetch('https://customer-ruby-1712.my.salesforce.com/services/oauth2/token', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: authParams.toString(),
-    });
-
-    if (!authResponse.ok) {
-      throw new Error('Failed to authenticate with Salesforce');
+    if (missing.length > 0) {
+      return NextResponse.json(
+        { success: false, message: `Missing required fields: ${missing.join(', ')}` },
+        { status: 400 }
+      );
     }
 
-    const authData = await authResponse.json();
-    const accessToken = authData.access_token;
-
-    // 2. Format the Lead Payload
-    const leadPayload = {
-      firstName: body.firstName,
-      lastName: body.lastName,
-      email: body.email,
+    // Build the lead data object
+    const lead: LeadData = {
+      fullName: body.fullName,
       phone: body.phone,
-      applicantDOB: body.dob,
-      loanAmount: body.debtValue,
-      leadSource: "Website",
+      email: body.email,
+      state: body.state,
+      loanAmount: Number(body.loanAmount),
+      loanTerm: Number(body.loanTerm),
+      estimatedMonthlyPayment: Number(body.estimatedMonthlyPayment) || 0,
+      estimatedTotalCost: Number(body.estimatedTotalCost) || 0,
+      unsecuredTotal: Number(body.unsecuredTotal) || 0,
+      estimatedSavings: Number(body.estimatedSavings) || 0,
+      smsConsent: Boolean(body.smsConsent),
+      communicationsConsent: Boolean(body.communicationsConsent),
+      quoteId: Number(body.quoteId) || 0,
+      submittedAt: new Date().toISOString(),
+      source: 'advantagefirst.com/calculator',
     };
 
-    // 3. Submit Lead to Salesforce
-    const leadResponse = await fetch('https://customer-ruby-1712.my.salesforce.com/services/apexrest/api/leads/Website', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(leadPayload)
-    });
+    // Route to all enabled backends
+    const results = await routeLeadToBackends(lead);
 
-    if (!leadResponse.ok) {
-      throw new Error('Failed to create lead in Salesforce');
-    }
+    // Check if at least one backend succeeded
+    const anySuccess = results.some((r) => r.success);
 
-    return NextResponse.json({ success: true });
+    const response: SubmitResponse = {
+      success: anySuccess,
+      results,
+      quoteId: lead.quoteId,
+    };
 
+    return NextResponse.json(response, { status: anySuccess ? 200 : 502 });
   } catch (error) {
-    console.error('Lead Submission Error:', error);
-    return NextResponse.json({ success: false }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message: `Server error: ${error instanceof Error ? error.message : 'Unknown'}` },
+      { status: 500 }
+    );
   }
 }

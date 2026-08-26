@@ -1,114 +1,142 @@
+import React from 'react';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 import Link from 'next/link';
+import { ShieldCheck, ArrowLeft, Lock, FileText, CheckCircle2 } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy | Advantage First Financial',
+  description: 'Advantage First Financial LLC privacy policy, financial data confidentiality, California CCPA rights, and SMS disclosure notice.',
+};
 
 export default function PrivacyPage() {
   return (
-    <div className="privacy-container">
-      <div className="privacy-content">
-        <h1>Advantage First Privacy Policy Disclosure</h1>
-        
-        <section className="privacy-section">
-          <h2>Your Financial Privacy Matters</h2>
-          <p>
-            At Advantage First ("AFF"), we value your financial privacy. This policy explains how AFF, our subsidiaries, and affiliates handle your personal information, both online and offline. We are committed to protecting your confidentiality and the security of your data.
-          </p>
-        </section>
+    <div className="min-h-screen flex flex-col justify-between bg-pv-bg" id="privacy-page-wrapper">
+      <Navbar />
 
-        <section className="privacy-section">
-          <h2>Policy Updates</h2>
-          <p>
-            We may update this policy from time to time. Any changes will be posted here, on our homepage, and through other appropriate channels. We encourage you to review this policy periodically for any modifications.
-          </p>
-        </section>
+      <main className="flex-grow py-12 sm:py-16 lg:py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          
+          {/* Breadcrumb */}
+          <div className="mb-8">
+            <Link 
+              href="/" 
+              className="inline-flex items-center gap-2 text-xs font-bold text-af-blue hover:text-af-navy transition-colors bg-white px-3.5 py-1.5 rounded-full border border-af-blue-ice shadow-2xs"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to Home</span>
+            </Link>
+          </div>
 
-        <section className="privacy-section">
-          <h2>Information We Collect</h2>
-          <p>
-            Our online form requires a free debt analysis through our website, we collect your name, address, email address, state of residence, phone number, amount of unsecured debt, IP address, website interactions, and referral source. This information helps us tailor our services to your needs.
-          </p>
-          <ul>
-            <li>Online: If you apply for debt relief through details such as education, employment, debts, creditors, life events, and financial information.</li>
-            <li>Offline: We may collect information about you from credit reporting agencies, third parties seeking with consumer identification, data brokers, social media, marketing sources, or your creditors.</li>
-            <li>Other Sources: We may obtain information about you from credit reporting agencies, third parties assisting with consumer identification, data brokers, social media, marketing sources, or your creditors.</li>
-          </ul>
-          <h3>How We Use Your Information:</h3>
-          <ul>
-            <li>Website Analytics: We use Google Analytics to understand how visitors interact with our website. This helps us improve our experience and tailor our online advertising. You can opt-out of Google Analytics by finding Advertising and customize Google Display Network ads using Ads Settings.</li>
-          </ul>
-        </section>
+          {/* Header */}
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-trust-green-light border border-trust-green/20 mb-4 shadow-2xs">
+              <Lock className="w-3.5 h-3.5 text-trust-green" />
+              <span className="text-[11px] font-extrabold uppercase tracking-widest text-trust-green">
+                Financial Privacy &amp; Data Security
+              </span>
+            </div>
+            
+            <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-af-navy tracking-tight leading-tight">
+              Privacy Policy Disclosure
+            </h1>
+            
+            <p className="text-xs sm:text-sm text-pv-muted mt-3 font-semibold">
+              Advantage First Financial, LLC · Effective Date: April 2026
+            </p>
+          </div>
 
-        <section className="privacy-section">
-          <h2>Cookies and Pixels</h2>
-          <p>
-            We use cookies to enhance user experience on our website and track user interests. You can adjust your browser settings to manage cookies. We also use pixels to improve ad relevancy and collect browsing information.
-          </p>
-        </section>
+          {/* Policy Document Box */}
+          <div className="p-8 sm:p-12 rounded-3xl bg-white border border-af-blue-ice shadow-sm space-y-10 text-sm text-pv-muted leading-relaxed" id="privacy-content">
+            
+            <section className="space-y-3">
+              <h2 className="text-xl font-extrabold text-af-navy">1. Your Financial Privacy Matters</h2>
+              <p>
+                At Advantage First Financial, LLC (“Advantage First,” “AFF,” “we,” “us,” or “our”), we value your financial privacy. This policy explains how AFF, our subsidiaries, and affiliates handle your personal information, both online and offline. We are committed to protecting your confidentiality and the security of your personal and financial data in full compliance with federal and state privacy statutes, including the Gramm-Leach-Bliley Act (GLBA) and the California Consumer Privacy Act (CCPA).
+              </p>
+            </section>
 
-        <section className="privacy-section">
-          <h2>Protecting Your Information</h2>
-          <p>
-            We have strict security measures in place to protect your personal information. Access is limited to authorized employees, and we maintain physical, electronic, and procedural safeguards in compliance with federal requirements.
-          </p>
-        </section>
+            <section className="space-y-3">
+              <h2 className="text-xl font-extrabold text-af-navy">2. Information We Collect</h2>
+              <p>
+                When you complete an inquiry or pre-qualification form on our website, we collect your name, residential address, email address, phone number, state of residence, requested loan amount, estimated credit tier, IP address, device interactions, and referral source.
+              </p>
+              <ul className="list-disc pl-5 space-y-2">
+                <li><strong>Online Submissions:</strong> Information provided during pre-qualification inquiries, including employment details, income estimates, debt amounts, and financial objectives.</li>
+                <li><strong>Credit Reporting Agencies:</strong> Information obtained from consumer reporting agencies (such as Experian, TransUnion, and Equifax) with your explicit authorization for pre-screening and credit evaluation.</li>
+                <li><strong>Offline Interactions:</strong> Records of telephone consultations, customer support interactions, and correspondence with our lending specialists.</li>
+              </ul>
+            </section>
 
-        <section className="privacy-section">
-          <h2>We do not sell your personal information disclosure</h2>
-          <p>
-            We do not sell your personal information. We only share information with service providers that help us operate our website and deliver services (e.g., hosting, analytics, and messaging), or when required by law.
-          </p>
-        </section>
+            <section className="space-y-3">
+              <h2 className="text-xl font-extrabold text-af-navy">3. How We Use Your Information</h2>
+              <p>
+                We use collected information to:
+              </p>
+              <ul className="list-disc pl-5 space-y-1.5">
+                <li>Evaluate your eligibility for direct loan offers and partner lender options.</li>
+                <li>Process applications and deliver pre-qualification estimates.</li>
+                <li>Verify your identity and prevent financial fraud.</li>
+                <li>Communicate with you regarding your application status, customer inquiries, and requested loan consultations.</li>
+                <li>Improve our website performance, user experience, and underwriting technology.</li>
+              </ul>
+            </section>
 
-        <section className="privacy-section">
-          <h2>Your California Privacy Rights</h2>
-          <p>
-            As a California resident you have certain rights regarding your personal information under the California Consumer Privacy Act (CCPA), to the extent your data is not exempt under the Gramm-Leach-Bliley Act (GLBA). These rights include:
-          </p>
-          <ul>
-            <li>Right to Know</li>
-            <li>Right to Delete</li>
-            <li>Right to Opt-Out of Sale</li>
-            <li>Right to Data Portability</li>
-            <li>Right to Non-Discrimination</li>
-          </ul>
-          <p>To exercise these rights or for more information, please contact us:</p>
-          <ul>
-            <li>CCPA Request Form</li>
-            <li>(855) 517-8811</li>
-            <li><a href="mailto:admin@advantagefirst.com">admin@advantagefirst.com</a></li>
-          </ul>
-        </section>
+            <section className="space-y-3">
+              <h2 className="text-xl font-extrabold text-af-navy">4. We Do Not Sell Your Personal Information</h2>
+              <p>
+                <strong>Advantage First Financial does not sell your personal information.</strong> We share consumer information only with authorized service providers assisting in loan origination, communications delivery (such as SMS and email platforms), hosting, compliance auditing, or when required by court order or regulatory authority.
+              </p>
+            </section>
 
-        <section className="privacy-section">
-          <p><strong>SMS Terms &amp; Conditions:</strong> By subscribing to Advantage First, LLC SMS services, you agree to receive text messages from us. Advantage First, LLC will send SMS messages to communicate with customers on the status of the projects they have requested to provide a better overall customer experience. For HELP, please contact us at (800) 344 1202. To opt out of receiving messages, reply with "STOP" at any time. Message frequency may vary. Standard message and data rates may apply.</p>
-          <p><strong>By providing my phone number, I consent to receive calls and SMS/text messages regarding my inquiry and pre-approval request. Reply STOP to opt out. Reply HELP for help. Msg &amp; data rates may apply. Message frequency varies. View our <Link href="/privacy">Privacy Policy</Link>.</strong></p>
-          <p>The categories mentioned above exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.</p>
-          <p>1) Text / SMS Marketing</p>
-          <p>If you choose to opt in to SMS communications from Advantage First Financial, LLC, you will receive text messages at the mobile number you provide.</p>
-          <p>2) Frequency of Messages</p>
-          <p>Message frequency may vary based on your orders, account activity, and ongoing promotions. You will receive messages relevant to your transactions and occasional promotional updates.</p>
-          <p>3) Opt-Out and Support Options</p>
-          <p>You may opt out of receiving text messages at any time by texting "STOP". Upon receipt of your opt-out request, you will be unsubscribed and will no longer receive text messages from us. A confirmation message will be sent to confirm that you have unsubscribed. Should you wish to subscribe, you may text "START" to receive SMS messages again.</p>
-          <p>For assistance with the messaging service, text "HELP" or contact <a href="mailto:admin@advantagefirst.com">admin@advantagefirst.com</a></p>
-          <p>4) Wireless Carrier Rates and Services</p>
-          <p>Wireless carrier message and data rates may apply. Wireless carriers are not liable for delayed or undelivered messages.</p>
-          <p>5) Confidentiality</p>
-          <p>We will maintain the confidentiality of your mobile number. Your mobile number will not be shared with third parties for their own marketing purposes. However, for operational purposes, your mobile number may be shared with our service providers who assist in the delivery of our SMS communications. These providers are required to maintain the confidentiality of your personal information and may not use it for their own purposes.</p>
-          <p>If you have questions or concerns about this policy, please email us at <a href="mailto:admin@advantagefirst.com">admin@advantagefirst.com</a>. For technical issues with our website, please contact our Webmaster at <a href="mailto:admin@advantagefirst.com">admin@advantagefirst.com</a></p>
-          <p><strong>All the above categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.</strong></p>
-          <p><strong>We will not share your opt-in to an SMS campaign with any third party for purposes unrelated to providing you with the services of that campaign. We may share your Personal Data, including your SMS opt-in or consent status, with third parties that help us provide our messaging services, including but not limited to platform providers, phone companies, and any other vendors who assist us in the delivery of text messages. Msg &amp; data rates may apply. Msg frequency varies. Unsubscribe at any time by replying STOP or clicking the unsubscribe link (where available). Reply HELP for help.</strong></p>
-          <p>Interest rates are competitive and comparable to those offered by major financial institutions and banks. We do not charge rates higher than those typically offered by large banks. This ensures that our services are not considered high risk financial products.</p>
-          <p><strong>Effective Date: March 2024</strong></p>
-        </section>
+            <section className="space-y-3">
+              <h2 className="text-xl font-extrabold text-af-navy">5. SMS / Text Messaging Terms &amp; Conditions</h2>
+              <p>
+                By opting in to receive SMS messages from Advantage First Financial, LLC, you consent to receive text messages regarding your inquiry, application status, and loan notifications at the mobile number you provided. Message and data rates may apply. Message frequency varies based on your application activity.
+              </p>
+              <div className="p-4 rounded-2xl bg-af-blue-soft/60 border border-af-blue-ice space-y-2 text-xs">
+                <p><strong>Opt-Out:</strong> You may opt out of SMS communications at any time by texting <strong>STOP</strong> to any message. You will receive a one-time confirmation text. To re-subscribe, text <strong>START</strong>.</p>
+                <p><strong>Support:</strong> For help, text <strong>HELP</strong> or email <a href="mailto:info@advantagefirst.com" className="text-af-blue underline">info@advantagefirst.com</a> or call <a href="tel:18003441202" className="text-af-blue underline">(800) 344-1202</a>.</p>
+                <p><strong>Privacy of Mobile Numbers:</strong> Text messaging originator opt-in data and consent will not be shared with or sold to any third parties for their own marketing purposes.</p>
+              </div>
+            </section>
 
-        <section className="privacy-footer-links">
-          <a href="#ccpa">CCPA</a> 
-          <a href="#personal-info">personal information</a> 
-          <a href="#financial-privacy">financial privacy</a> 
-          <a href="#privacy-policy">privacy policy</a> 
-          <a href="#data-protection">data protection</a> 
-          <a href="#california-rights">California privacy rights</a> 
-          <a href="#online-privacy">online privacy</a>
-        </section>
-      </div>
+            <section className="space-y-3">
+              <h2 className="text-xl font-extrabold text-af-navy">6. Your California Privacy Rights (CCPA)</h2>
+              <p>
+                California residents have specific privacy rights regarding personal information under the California Consumer Privacy Act (CCPA) to the extent data is not governed by the Gramm-Leach-Bliley Act (GLBA):
+              </p>
+              <ul className="list-disc pl-5 space-y-1.5">
+                <li><strong>Right to Know:</strong> You may request the categories and specific pieces of personal information collected about you.</li>
+                <li><strong>Right to Delete:</strong> You may request deletion of your personal data, subject to legal and regulatory retention obligations.</li>
+                <li><strong>Right to Non-Discrimination:</strong> We will not discriminate against you for exercising your privacy rights.</li>
+              </ul>
+              <p className="pt-2">
+                To submit a CCPA privacy request, email <a href="mailto:info@advantagefirst.com" className="text-af-blue underline">info@advantagefirst.com</a> or call toll-free at <a href="tel:18003441202" className="text-af-blue underline">(800) 344-1202</a>.
+              </p>
+            </section>
+
+            <section className="space-y-3">
+              <h2 className="text-xl font-extrabold text-af-navy">7. Contact Information</h2>
+              <p>
+                If you have questions regarding this Privacy Policy, please contact our Compliance Department:
+              </p>
+              <div className="p-4 rounded-xl bg-white border border-af-blue-ice space-y-1 text-xs">
+                <p className="font-bold text-af-navy">Advantage First Financial, LLC</p>
+                <p>3187 Red Hill Ave Suite 230, Costa Mesa, CA 92626</p>
+                <p>Email: <a href="mailto:info@advantagefirst.com" className="text-af-blue underline">info@advantagefirst.com</a></p>
+                <p>Phone: (714) 351-7616 · Toll-Free: (800) 344-1202</p>
+                <p>NMLS Unique Identifier: #2674295</p>
+              </div>
+            </section>
+
+          </div>
+
+        </div>
+      </main>
+
+      <Footer />
     </div>
   );
 }

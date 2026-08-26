@@ -1,214 +1,124 @@
-"use client";
+import React from 'react';
+import Navbar from '../components/Navbar';
+import TypewriterHeader from '../components/TypewriterHeader';
+import BenefitChecklist from '../components/BenefitChecklist';
+import SavingsEstimator from '../components/SavingsEstimator';
+import StatsRow from '../components/StatsRow';
+import LoanSolutionsGrid from '../components/LoanSolutionsGrid';
+import ProcessSteps from '../components/ProcessSteps';
+import LenderComparisonTable from '../components/LenderComparisonTable';
+import TrustBar from '../components/TrustBar';
+import BlogPreview from '../components/BlogPreview';
+import TestimonialGrid from '../components/TestimonialGrid';
+import TrustpilotCarousel from '../components/TrustpilotCarousel';
+import HeroReviews from '../components/HeroReviews';
+import HeroBadges from '../components/HeroBadges';
+import FaqAccordion from '../components/FaqAccordion';
+import ClosingCta from '../components/ClosingCta';
+import Footer from '../components/Footer';
+import ScrollDepthTracker from '../components/ScrollDepthTracker';
+import { ShieldCheck, Sparkles } from 'lucide-react';
 
-import { useEffect } from 'react';
-import Link from 'next/link';
-
-export default function Home() {
-  // Triggers Trustpilot to reload when navigating back to Home
-  useEffect(() => {
-    const trustpilot = (window as any).Trustpilot;
-    if (trustpilot && trustpilot.loadFromElement) {
-      const widget = document.querySelector('.trustpilot-widget');
-      if (widget) {
-        trustpilot.loadFromElement(widget);
-      }
-    }
-  }, []);
-
+export default function Page() {
   return (
-    <>
-      {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-container">
-          <div className="hero-content">
-            <h1>Get the Advantage to financial freedom</h1>
-            <p>The money you need, when you need it, with flexible terms, competitive rates, and a team that puts you first.</p>
-            <Link href="/verify" className="btn-hero">Apply Now</Link>
-            <ul className="hero-features">
-              <li>Amounts up to $100,000</li>
-              <li>Fixed rates as low as 5.99% APR</li>
-              <li>Terms up to 72 months</li>
-            </ul>
-          </div>
-        </div>
-        <div className="hero-image" aria-hidden="false">
-          <img src="/home-hero-img-DT.jpg" alt="Couple reviewing finances" />
-        </div>
-        <div className="hero-mobile-image">
-          <img src="/home-hero-img-DT.jpg" alt="Couple reviewing finances" />
-        </div>
-      </section>
+    <div className="min-h-screen flex flex-col justify-between bg-pv-bg" id="app-wrapper">
+      
+      {/* 1. Sticky Navigation (Official Logo, 4-Item Nav, 1-Line Phone, Red CTA) */}
+      <Navbar />
 
-      {/* Trustpilot Section */}
-      <section className="trustpilot-section">
-        <div className="trustpilot-container">
-          <div className="tp-cta-section">
-            <div className="tp-cta-container">
-              <h2 className="trustpilot-heading" style={{ color: '#1D315F' }}>
-                Transparent pricing and repayment terms
-              </h2>
-              <p className="trustpilot-subheading" style={{ color: '#1D315F' }}>
-                See why thousands of borrowers have chosen us:
+      {/* 2. S-Tier Split Hero Section */}
+      <section className="relative overflow-hidden pt-4 pb-12 sm:pt-14 sm:pb-16 lg:pt-18 lg:pb-20 bg-mesh-hero" id="hero-split-section">
+        {/* Subtle grid texture overlay */}
+        <div className="absolute inset-0 bg-dot-pattern opacity-40 pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-stretch">
+            
+            <div className="lg:col-span-7 flex flex-col gap-6 text-left h-full self-stretch" id="hero-left-content">
+
+              <HeroBadges />
+
+              {/* Tier 3: Main hero content — headline, subtitle, checklist, trust signals */}
+              <div className="order-1 lg:order-1 flex flex-col gap-3 mt-2">
+              {/* Headline with Typewriter Rotating Phrases */}
+              <TypewriterHeader />
+
+              {/* Hero Subtitle */}
+              <p className="text-base sm:text-lg lg:text-xl text-pv-muted max-w-[50ch] leading-relaxed" id="hero-subtext">
+                The money you need, when you need it — with competitive rates as low as <strong className="text-af-navy font-bold">5.99% APR</strong>, terms up to 72 months, and a trusted team that puts you first.
               </p>
-              
-              <div 
-                className="trustpilot-widget" 
-                data-locale="en-US" 
-                data-template-id="54ad5defc6454f065c28af8b" 
-                data-businessunit-id="64f10ba8d79983d2c4f6adc6" 
-                data-token="66117040-b542-4651-8ff0-df1ad0835d2d" 
-                data-style-height="240px" 
-                data-style-width="100%" 
-                data-stars="5" 
-                data-review-languages="en" 
-                style={{ position: 'relative' }}
-              >
-                <iframe 
-                  title="Customer reviews powered by Trustpilot" 
-                  loading="lazy" 
-                  src="https://widget.trustpilot.com/trustboxes/54ad5defc6454f065c28af8b/index.html?templateId=54ad5defc6454f065c28af8b&businessunitId=64f10ba8d79983d2c4f6adc6#locale=en-US&token=66117040-b542-4651-8ff0-df1ad0835d2d&styleHeight=240px&styleWidth=100%25&stars=5&reviewLanguages=en" 
-                  style={{ position: 'relative', height: '240px', width: '100%', borderStyle: 'none', display: 'block', overflow: 'hidden' }}
-                ></iframe>
+
+              {/* Benefit Checklist with Double-Bezel Cards */}
+              <BenefitChecklist />
+
+              </div>{/* end Tier 3 wrapper */}
+
+              {/* Quick Trust Signals Bar — below TP badge on desktop */}
+              <div className="order-2 lg:order-5 pt-4 flex flex-wrap items-center justify-center gap-6 text-[14px] sm:text-xs font-semibold text-pv-muted border-t border-af-blue-ice/60">
+                <div className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-trust-green" />
+                  <span>No Upfront Fees</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-af-blue" />
+                  <span>Soft Credit Check Only</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-af-red" />
+                  <span>Texas OCCC &amp; Utah DFI Licensed</span>
+                </div>
+              </div>
+
+              {/* ── 4 Random Trustpilot Review Cards (from scraped pool) ── */}
+              <HeroReviews />
+
+            </div>
+
+            {/* Right Column: Free Savings & Loan Estimator */}
+            <div className="lg:col-span-5" id="estimator-anchor">
+              <div className="w-full transform transition-all duration-300 hover:shadow-2xl" id="estimator-card-container">
+                <SavingsEstimator />
               </div>
             </div>
-          </div>
-          <div className="trustpilot-button-wrapper">
-            <Link href="/verify" className="btn-trustpilot">Apply Now</Link>
+
           </div>
         </div>
       </section>
 
-      {/* Journey Section */}
-      <section className="journey-section">
-        <div className="journey-card">
-          <div className="journey-card-content">
-            <div className="journey-icon">
-              <img src="/get-started-icon_DT.png" alt="Financial Journey" />
-            </div>
-            <div className="journey-text">
-              <h2>Start your journey with Advantage First</h2>
-              <p>Whether it's consolidating debt, covering expenses, or funding big projects, you can secure the money necessary to achieve your goals without difficulty or stress. Elevate your financial success with a customized loan solution through Advantage First's network of lenders.</p>
-              <div className="journey-features">
-                <div className="feature-item">
-                  <h3>Quick approvals</h3>
-                  <p>Fast decisions so you can move forward with confidence</p>
-                </div>
-                <div className="feature-item">
-                  <h3>Flexible loan options</h3>
-                  <p>Tailored to your situation and aspirations</p>
-                </div>
-                <div className="feature-item">
-                  <h3>Competitive rates</h3>
-                  <p>Fixed interest for the life of your loan</p>
-                </div>
-                <div className="feature-item">
-                  <h3>No hidden fees</h3>
-                  <p>Transparent pricing and repayment terms</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 3. 4-Column Bento Stat Metrics */}
+      <StatsRow />
 
-      {/* Solutions Section */}
-      <section className="simple-solutions-section">
-        <div className="simple-solutions-container">
-          <h2>Simple solutions to unique situations</h2>
-          <p className="section-subtitle">We connect you with the right loan solution to meet your needs and empower your financial freedom.</p>
-          <div className="solutions-grid">
-            <div className="solution-card">
-              <div className="solution-icon"><img src="/personal-loans-icon_DT.png" alt="Personal loans" /></div>
-              <div className="solution-content">
-                <h3>Personal loans</h3>
-                <p>Accomplish your goals with a simple and hassle-free loan that can be customized to your budget.</p>
-                <Link href="/services" className="btn-learn-more">Learn more</Link>
-              </div>
-            </div>
-            <div className="solution-card">
-              <div className="solution-icon"><img src="/debt-consolidation-icon-DT.png" alt="Debt consolidation" /></div>
-              <div className="solution-content">
-                <h3>Debt consolidation</h3>
-                <p>Simplify your finances and save with a single monthly payment at a lower rate.</p>
-                <Link href="/services" className="btn-learn-more">Learn more</Link>
-              </div>
-            </div>
-            <div className="solution-card">
-              <div className="solution-icon"><img src="/home-improvements-icon_DT.png" alt="Home improvement" /></div>
-              <div className="solution-content">
-                <h3>Home improvement</h3>
-                <p>Fund renovations big or small to create the home you've always envisioned.</p>
-                <Link href="/services" className="btn-learn-more">Learn more</Link>
-              </div>
-            </div>
-            <div className="solution-card">
-              <div className="solution-icon"><img src="/business-needs-icon_DT.png" alt="Business needs" /></div>
-              <div className="solution-content">
-                <h3>Business needs</h3>
-                <p>Unlock capital to support your business's daily operations and future growth.</p>
-                <Link href="/services" className="btn-learn-more">Learn more</Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* 4. Multi-Lender Comparison Network (SoFi, Prosper, Upgrade, Best Egg) */}
+      <LenderComparisonTable />
 
-      {/* CTA Section */}
-      <section className="cta-section">
-        <div className="cta-container">
-          <div className="cta-content">
-            <h2>Advantage First is here to help you find the right path to financial freedom</h2>
-            <p className="cta-loan-subtitle">One application can unlock multiple loan offers.<br />For example:</p>
-            <table className="cta-loan-table">
-              <thead>
-                <tr><th>Lender</th><th>Amount</th><th>APR</th><th>Term</th></tr>
-              </thead>
-              <tbody>
-                <tr><td>SoFi</td><td>$40,000</td><td>5.99%</td><td>48 mos.</td></tr>
-                <tr><td>Prosper</td><td>$35,000</td><td>6.99%</td><td>60 mos.</td></tr>
-                <tr><td>Upgrade</td><td>$30,000</td><td>7.29%</td><td>36 mos.</td></tr>
-                <tr><td>Best Egg</td><td>$25,000</td><td>8.99%</td><td>36 mos.</td></tr>
-              </tbody>
-            </table>
-            <p>Let's explore your loan options today.</p>
-            <Link href="/verify" className="btn-get-quote">Apply Now</Link>
-          </div>
-          <div className="cta-image"><img src="/end_CTA_img_DT.png" alt="Woman with laptop" /></div>
-        </div>
-      </section>
+      {/* 5. How It Works (3-Step Interactive Stepper) */}
+      <ProcessSteps />
 
-      {/* Financial Wellbeing Section */}
-      <section className="financial-wellbeing-section">
-        <div className="financial-wellbeing-container">
-          <h2>We're all about your financial well-being</h2>
-          <p className="section-subtitle">Check out our resources page for useful blog topics, like:</p>
-          <div className="blog-cards-grid">
-            <div className="blog-card">
-              <div className="blog-image"><img src="/financial_success_img_DT.png" alt="Financial Success" /></div>
-              <div className="blog-content">
-                <h3>Financial Success</h3>
-                <p>Elevate your financial success with experts chosen solutions.</p>
-                <Link href="/blog/financialsuccess" className="blog-link">
-                  Read more <img src="/Chevron_Right_DT.png" alt="Arrow" className="blog-arrow" />
-                </Link>
-              </div>
-            </div>
-            <div className="blog-card">
-              <div className="blog-image"><img src="/empowering_lives_img_DT.png" alt="Empowering Lives" /></div>
-              <div className="blog-content">
-                <h3>Empowering Lives</h3>
-                <p>We empower lives by restoring financial freedom and peace of mind.</p>
-                <Link href="/blog/empoweringlives" className="blog-link">
-                  Read more <img src="/Chevron_Right_DT.png" alt="Arrow" className="blog-arrow" />
-                </Link>
-              </div>
-            </div>
-          </div>
-          <div className="blog-button-wrapper">
-            <Link href="/blog" className="btn-see-more">See more</Link>
-          </div>
-        </div>
-      </section>
-    </>
+      {/* 6. Core Loan Solutions (Personal, Loan Consolidation, Home Improvement, Business) */}
+      <LoanSolutionsGrid />
+
+      {/* 7. Trustpilot Live Rating & State Licensing Bar */}
+      <TrustBar />
+
+      {/* 8. Verified Borrower Testimonials Wall */}
+      <TestimonialGrid />
+
+
+      {/* 9. Blog & Financial Resources Hub */}
+      <BlogPreview />
+
+      {/* 10. Frequently Asked Questions Accordion */}
+      <FaqAccordion />
+
+      {/* 11. High-Impact Closing CTA Band */}
+      <ClosingCta />
+
+      {/* 12. Regulatory Disclosures & Financial Footer */}
+      <Footer />
+
+      {/* Analytics: Scroll Depth Tracking */}
+      <ScrollDepthTracker />
+
+    </div>
   );
 }
