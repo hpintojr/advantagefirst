@@ -25,10 +25,10 @@ export const backendConfig = {
   //  Get your URL + anon key from: Supabase Dashboard → Settings → API
   // ─────────────────────────────────────────────────────────────────
   supabase: {
-    enabled: false,
-    url: '',              // e.g. 'https://xyzproject.supabase.co'
-    anonKey: '',          // e.g. 'eyJhbGciOiJIUzI1NiIs...'
-    tableName: 'leads',   // Table name to insert leads into
+    enabled: true,
+    url: process.env.SUPABASE_URL || '',        // e.g. 'https://xyzproject.supabase.co'
+    anonKey: process.env.SUPABASE_ANON_KEY || '', // e.g. 'eyJhbGciOiJIUzI1NiIs...'
+    tableName: 'leads',   // Table name to insert leads into — upserted on the `email` column, see supabase.ts
     newsletterTable: 'newsletter_subscribers', // Table name for newsletter signups
   },
 
@@ -49,27 +49,30 @@ export const backendConfig = {
   //  Location ID from: GHL → Settings → Business Profile
   // ─────────────────────────────────────────────────────────────────
   ghlApi: {
-    enabled: false,
-    apiKey: '',           // e.g. 'pit-abc123def456...'
-    locationId: '',       // e.g. 'loc_abc123...'
+    enabled: true,
+    apiKey: process.env.GHL_API_KEY || '',           // GHL Private Integration token — Settings → Business Profile → API Keys
+    locationId: process.env.GHL_LOCATION_ID || 'oY7nDZUrZG0KegzadZgI', // Loan Streamline Pro location
   },
 
   // ─────────────────────────────────────────────────────────────────
   //  4. SALESFORCE
   //  Creates a Lead object via Salesforce Web-to-Lead or REST API.
   //  Option A (Web-to-Lead): Just provide your OID — no auth needed.
-  //  Option B (REST API): Provide instance URL + access token.
+  //  Option B (REST API): Provide instance URL + Connected App
+  //  client id/secret — salesforce.ts fetches + caches its own OAuth2
+  //  client_credentials token, so there's no static token to rotate.
   // ─────────────────────────────────────────────────────────────────
   salesforce: {
-    enabled: false,
-    mode: 'web-to-lead' as 'web-to-lead' | 'rest-api',
-    
-    // Web-to-Lead mode (simplest)
+    enabled: true,
+    mode: 'rest-api' as 'web-to-lead' | 'rest-api',
+
+    // Web-to-Lead mode (simplest) — not used in rest-api mode
     oid: '',              // e.g. '00D5g000004XXXX' (Organization ID)
-    
-    // REST API mode (more control)
-    instanceUrl: '',      // e.g. 'https://yourinstance.salesforce.com'
-    accessToken: '',      // OAuth bearer token
+
+    // REST API mode (more control) — Connected App client_credentials flow
+    instanceUrl: process.env.SALESFORCE_INSTANCE_URL || '', // e.g. 'https://customer-ruby-1712.my.salesforce.com'
+    clientId: process.env.SALESFORCE_CLIENT_ID || '',
+    clientSecret: process.env.SALESFORCE_CLIENT_SECRET || '',
   },
 
 } as const satisfies Record<string, { enabled: boolean; [key: string]: unknown }>;

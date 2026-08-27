@@ -1,6 +1,11 @@
 /**
  * Salesforce Backend Adapter
  * Supports Web-to-Lead and REST API modes using mapped field names.
+ *
+ * REST API mode authenticates via the OAuth2 client_credentials flow
+ * (same Connected App the old site's Apex integration used) instead
+ * of a static bearer token. The token is cached in memory and only
+ * re-fetched once it's within 60s of expiring.
  */
 
 import { LeadData, BackendResult } from '../leadTypes';
@@ -13,8 +18,50 @@ export async function sendToSalesforce(lead: LeadData): Promise<BackendResult> {
   if (config.mode === 'web-to-lead') {
     return sendWebToLead(lead, config.oid);
   } else {
-    return sendRestApi(lead, config.instanceUrl, config.accessToken);
+    return sendRestApi(lead, config.instanceUrl, config.clientId, config.clientSecret);
   }
+}
+
+// ───────────────────────────────────────────────────────────────────
+//  In-memory access token cache for the client_credentials flow.
+//  Serverless instances are short-lived, so this mainly helps when a
+//  single instance handles multiple submissions back to back.
+// ───────────────────────────────────────────────────────────────────
+let cachedToken: { accessToken: string; instanceUrl: string; expiresAt: number } | null = null;
+
+async function getAccessToken(instanceUrl: string, clientId: string, clientSecret: string): Promise<{ accessToken: string; instanceUrl: string }> {
+  const now = Date.now();
+  if (cachedToken && now < cachedToken.expiresAt - 60_000) {
+    return { accessToken: cachedToken.accessToken, instanceUrl: cachedToken.instanceUrl };
+  }
+
+  const authParams = new URLSearchParams({
+    grant_type: 'client_credentials',
+    client_id: clientId,
+    client_secret: clientSecret,
+  });
+
+  const authResponse = await fetch(`${instanceUrl}/services/oauth2/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: authParams.toString(),
+  });
+
+  if (!authResponse.ok) {
+    const errorText = await authResponse.text();
+    throw new Error(`Salesforce OAuth failed: HTTP ${authResponse.status}: ${errorText}`);
+  }
+
+  const authData = await authResponse.json();
+  // Salesforce doesn't return expires_in for client_credentials — assume
+  // a conservative 15 minutes so we re-auth well before any real expiry.
+  cachedToken = {
+    accessToken: authData.access_token,
+    instanceUrl: authData.instance_url || instanceUrl,
+    expiresAt: now + 15 * 60_000,
+  };
+
+  return { accessToken: cachedToken.accessToken, instanceUrl: cachedToken.instanceUrl };
 }
 
 /**
@@ -50,9 +97,10 @@ async function sendWebToLead(lead: LeadData, oid: string): Promise<BackendResult
 
 /**
  * Salesforce REST API
- * Uses mapped field names for the Lead object.
+ * Uses mapped field names for the Lead object. Authenticates via the
+ * Connected App's client_credentials flow (see getAccessToken above).
  */
-async function sendRestApi(lead: LeadData, instanceUrl: string, accessToken: string): Promise<BackendResult> {
+async function sendRestApi(lead: LeadData, instanceUrl: string, clientId: string, clientSecret: string): Promise<BackendResult> {
   const mapped = mapLeadToBackend(lead, 'salesforce');
 
   // REST API requires Company field on Lead
@@ -60,8 +108,15 @@ async function sendRestApi(lead: LeadData, instanceUrl: string, accessToken: str
     mapped['Company'] = 'Individual';
   }
 
+  // LeadSource is a controlled picklist on this org — 'Website' is an
+  // active value. The raw calculator URL goes to Source_URL__c instead
+  // (see backendcolumns.ts).
+  mapped['LeadSource'] = 'Website';
+
   try {
-    const response = await fetch(`${instanceUrl}/services/data/v59.0/sobjects/Lead/`, {
+    const { accessToken, instanceUrl: authedInstanceUrl } = await getAccessToken(instanceUrl, clientId, clientSecret);
+
+    const response = await fetch(`${authedInstanceUrl}/services/data/v59.0/sobjects/Lead/`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

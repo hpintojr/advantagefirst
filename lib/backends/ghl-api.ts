@@ -30,6 +30,7 @@ export async function sendToGhlApi(lead: LeadData): Promise<BackendResult> {
     [cols.unsecuredTotal, lead.unsecuredTotal],
     [cols.estimatedSavings, lead.estimatedSavings],
     [cols.smsConsent, lead.smsConsent ? 'Yes' : 'No'],
+    [cols.communicationsConsent, lead.communicationsConsent ? 'Yes' : 'No'],
     [cols.quoteId, lead.quoteId],
     [cols.submittedAt, lead.submittedAt],
   ];
@@ -57,7 +58,7 @@ export async function sendToGhlApi(lead: LeadData): Promise<BackendResult> {
         source: lead.source,
         locationId: config.locationId,
         customFields,
-        tags: ['website-calculator', 'advantage-first'],
+        tags: ['sms-web-purl-aff'],
       }),
     });
 

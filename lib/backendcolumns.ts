@@ -100,6 +100,13 @@ export const backendColumns: Record<string, FieldMapping> = {
 
   // ─────────────────────────────────────────────────────────────────
   //  GHL CONTACTS API — Field names for contact creation
+  //
+  //  Verified against the live "Loan Streamline Pro" location's custom
+  //  fields on 2026-08-26. All 9 calculator/consent fields were created
+  //  in GHL → Settings → Custom Fields (Contact object, Additional Info
+  //  folder) and mapped to their live field keys below, alongside the
+  //  pre-existing "Debt Amount" field (contact.debt_amount) that
+  //  unsecuredTotal reuses.
   // ─────────────────────────────────────────────────────────────────
   ghlApi: {
     fullName:                 'full_name',
@@ -108,24 +115,35 @@ export const backendColumns: Record<string, FieldMapping> = {
     phone:                    'phone',
     email:                    'email',
     state:                    'state',
-    loanAmount:               'loan_amount',
-    loanTerm:                 'loan_term',
-    estimatedMonthlyPayment:  'estimated_monthly_payment',
-    estimatedTotalCost:       'estimated_total_cost',
-    unsecuredTotal:           'unsecured_total',
-    estimatedSavings:         'estimated_savings',
-    smsConsent:               'sms_consent',
-    communicationsConsent:    'communications_consent',
-    quoteId:                  'quote_id',
-    submittedAt:              'submitted_at',
+    loanAmount:               'contact.loan_amount',
+    loanTerm:                 'contact.loan_term',
+    estimatedMonthlyPayment:  'contact.est_monthly_payment',
+    estimatedTotalCost:       'contact.est_total_cost',
+    unsecuredTotal:           'contact.debt_amount',
+    estimatedSavings:         'contact.est_savings',
+    smsConsent:               'contact.sms_consent',
+    communicationsConsent:    'contact.communications_consent',
+    quoteId:                  'contact.quote_id',
+    submittedAt:              'contact.submitted_at',
     source:                   'source',
   },
 
   // ─────────────────────────────────────────────────────────────────
   //  SALESFORCE — Field names for Lead object
+  //
+  //  Verified against the live Advantage First Financial Lead object
+  //  (customer-ruby-1712.my.salesforce.com) on 2026-08-26. `Name` is a
+  //  read-only compound field on Lead — FirstName/LastName cover it, so
+  //  it's excluded here. `submittedAt` is excluded too since CreatedDate
+  //  captures that automatically. `LeadSource` is a controlled picklist
+  //  (hardcoded to 'Website' in lib/backends/salesforce.ts) rather than
+  //  a free-text field, so `source` maps to Source_URL__c instead.
+  //  unsecuredTotal reuses the existing Total_Estimated_Debt__c field,
+  //  and quoteId reuses the existing Applicant_Reference_ID__c field —
+  //  both were already on the object and are a good semantic fit.
   // ─────────────────────────────────────────────────────────────────
   salesforce: {
-    fullName:                 'Name',
+    fullName:                 '',
     firstName:                'FirstName',
     lastName:                 'LastName',
     phone:                    'Phone',
@@ -135,13 +153,13 @@ export const backendColumns: Record<string, FieldMapping> = {
     loanTerm:                 'Loan_Term__c',
     estimatedMonthlyPayment:  'Est_Monthly_Payment__c',
     estimatedTotalCost:       'Est_Total_Cost__c',
-    unsecuredTotal:           'Unsecured_Total__c',
+    unsecuredTotal:           'Total_Estimated_Debt__c',
     estimatedSavings:         'Est_Savings__c',
     smsConsent:               'SMS_Consent__c',
     communicationsConsent:    'Comms_Consent__c',
-    quoteId:                  'Quote_ID__c',
-    submittedAt:              'Submitted_At__c',
-    source:                   'LeadSource',
+    quoteId:                  'Applicant_Reference_ID__c',
+    submittedAt:              '',
+    source:                   'Source_URL__c',
   },
 
 };
