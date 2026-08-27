@@ -22,11 +22,11 @@ export async function sendToSalesforce(lead: LeadData): Promise<BackendResult> {
   }
 }
 
-// ───────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────
 //  In-memory access token cache for the client_credentials flow.
 //  Serverless instances are short-lived, so this mainly helps when a
 //  single instance handles multiple submissions back to back.
-// ───────────────────────────────────────────────────────────────────
+// ──────────────────────────────────────────────────────────────
 let cachedToken: { accessToken: string; instanceUrl: string; expiresAt: number } | null = null;
 
 export async function getAccessToken(instanceUrl: string, clientId: string, clientSecret: string): Promise<{ accessToken: string; instanceUrl: string }> {
@@ -108,10 +108,12 @@ async function sendRestApi(lead: LeadData, instanceUrl: string, clientId: string
     mapped['Company'] = 'Individual';
   }
 
-  // LeadSource is a controlled picklist on this org — 'Website' is an
-  // active value. The raw calculator URL goes to Source_URL__c instead
-  // (see backendcolumns.ts).
-  mapped['LeadSource'] = 'Website';
+  // LeadSource on this org is an unrestricted picklist (accepts values
+  // outside the predefined list). Leads from this calculator webform
+  // are tagged 'Website-AFF' specifically so they're distinguishable
+  // from other 'Website' sources. The raw calculator URL still goes to
+  // Source_URL__c (see backendcolumns.ts).
+  mapped['LeadSource'] = 'Website-AFF';
 
   try {
     const { accessToken, instanceUrl: authedInstanceUrl } = await getAccessToken(instanceUrl, clientId, clientSecret);
