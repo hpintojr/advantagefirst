@@ -14,9 +14,14 @@
 import { NextResponse } from 'next/server';
 import { backendConfig } from '@/lib/backendconnect';
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 
-const COUNTER_FILE = path.join(process.cwd(), 'data', 'quote-counter.json');
+// Vercel's serverless functions ship a read-only filesystem — only
+// os.tmpdir() (/tmp) is writable, and even that isn't shared across
+// instances/cold starts. This is a best-effort counter, not a durable
+// one; the Supabase counter above is the durable path when configured.
+const COUNTER_FILE = path.join(os.tmpdir(), 'quote-counter.json');
 const COUNTER_TABLE = 'quote_counter';
 
 /**
@@ -143,9 +148,12 @@ export async function POST() {
 
     return NextResponse.json({ quoteId, formatted });
   } catch (error) {
-    return NextResponse.json(
-      { error: `Failed to generate quote ID: ${error instanceof Error ? error.message : 'Unknown'}` },
-      { status: 500 }
-    );
+    // Never let a broken counter block the calculator — fall back to a
+    // timestamp-based ID (still unique, just not sequential) instead of
+    // a 500, so the frontend never shows "AFF-undefined".
+    console.error(`Quote ID generation failed, using timestamp fallback: ${error instanceof Error ? error.message : 'Unknown'}`);
+    const quoteId = Date.now() % 1000000;
+    const formatted = `AFF-${String(quoteId).padStart(6, '0')}`;
+    return NextResponse.json({ quoteId, formatted });
   }
 }
