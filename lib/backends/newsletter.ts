@@ -9,6 +9,7 @@
 import { NewsletterSubscriber } from '../newsletterTypes';
 import { BackendResult } from '../leadTypes';
 import { backendConfig } from '../backendconnect';
+import { getAccessToken } from './salesforce';
 
 // ─── 1. Supabase ─────────────────────────────────────────────────
 
@@ -126,12 +127,19 @@ export async function sendNewsletterToSalesforce(sub: NewsletterSubscriber): Pro
 
       return { backend: 'salesforce', success: true, message: 'Subscriber sent via Web-to-Lead' };
     } else {
-      // REST API mode
-      const response = await fetch(`${config.instanceUrl}/services/data/v58.0/sobjects/Lead`, {
+      // REST API mode — same Connected App client_credentials flow as
+      // the lead adapter (see salesforce.ts), reusing its token cache.
+      const { accessToken, instanceUrl: authedInstanceUrl } = await getAccessToken(
+        config.instanceUrl,
+        config.clientId,
+        config.clientSecret
+      );
+
+      const response = await fetch(`${authedInstanceUrl}/services/data/v58.0/sobjects/Lead`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${config.accessToken}`,
+          'Authorization': `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           Email: sub.email,

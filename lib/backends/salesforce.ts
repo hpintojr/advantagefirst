@@ -29,7 +29,7 @@ export async function sendToSalesforce(lead: LeadData): Promise<BackendResult> {
 // ───────────────────────────────────────────────────────────────────
 let cachedToken: { accessToken: string; instanceUrl: string; expiresAt: number } | null = null;
 
-async function getAccessToken(instanceUrl: string, clientId: string, clientSecret: string): Promise<{ accessToken: string; instanceUrl: string }> {
+export async function getAccessToken(instanceUrl: string, clientId: string, clientSecret: string): Promise<{ accessToken: string; instanceUrl: string }> {
   const now = Date.now();
   if (cachedToken && now < cachedToken.expiresAt - 60_000) {
     return { accessToken: cachedToken.accessToken, instanceUrl: cachedToken.instanceUrl };

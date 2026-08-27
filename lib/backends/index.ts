@@ -65,7 +65,7 @@ export async function routeLeadToBackends(lead: LeadData): Promise<BackendResult
     const sf = backendConfig.salesforce;
     const hasCredentials = sf.mode === 'web-to-lead'
       ? hasValue(sf.oid)
-      : hasValue(sf.instanceUrl) && hasValue(sf.accessToken);
+      : hasValue(sf.instanceUrl) && hasValue(sf.clientId) && hasValue(sf.clientSecret);
 
     if (hasCredentials) {
       promises.push(sendToSalesforce(lead));
@@ -115,7 +115,7 @@ export async function routeNewsletterToBackends(sub: NewsletterSubscriber): Prom
     const sf = backendConfig.salesforce;
     const hasCredentials = sf.mode === 'web-to-lead'
       ? hasValue(sf.oid)
-      : hasValue(sf.instanceUrl) && hasValue(sf.accessToken);
+      : hasValue(sf.instanceUrl) && hasValue(sf.clientId) && hasValue(sf.clientSecret);
 
     if (hasCredentials) {
       promises.push(sendNewsletterToSalesforce(sub));
