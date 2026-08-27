@@ -25,8 +25,8 @@ export default function SavingsEstimator() {
     phone: '',
     email: '',
     state: 'CA',
-    isAgreed: true,
-    isCreditAgreed: true,
+    isAgreed: false,
+    isCreditAgreed: false,
     programTerm: 36,
   });
 
