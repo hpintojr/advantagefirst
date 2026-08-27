@@ -9,37 +9,52 @@
 
 import { LeadData, BackendResult } from '../leadTypes';
 import { backendConfig } from '../backendconnect';
-import { backendColumns } from '../backendcolumns';
+
+// GHL's Contacts API (v2021-07-28) create-contact endpoint silently
+// drops customFields sent as { key, field_value } -- it only persists
+// them when addressed by the field's internal `id` as { id, value }
+// (confirmed empirically against the live "Loan Streamline Pro"
+// location on 2026-08-27). Field IDs below are from
+// GET /locations/{locationId}/customFields for this location.
+const GHL_FIELD_IDS: Record<string, string> = {
+  loanAmount: 'E9s5MpQeYciZ1frDdhkE',              // contact.loan_amount
+  loanTerm: 'xjBHTRXKd5dBU3GVSYBN',                 // contact.loan_term
+  estimatedMonthlyPayment: 'zyibQJAqYP8eXYSEjNMH',  // contact.est_monthly_payment
+  estimatedTotalCost: '89BhbG9i2aYQPwAFNlBQ',       // contact.est_total_cost
+  unsecuredTotal: 'AdL6052E4aeRnDLEClPh',            // contact.debt_amount
+  estimatedSavings: 'h7ePzoWXv79zwygTPu1C',          // contact.est_savings
+  smsConsent: 'hCssOAa9lGF8HRIM5wwT',                // contact.sms_consent
+  communicationsConsent: '5og7dovNie2z1lv7NDwY',     // contact.communications_consent
+  quoteId: 'NHiXePNOKnuK4L5pjSQ5',                   // contact.quote_id
+  submittedAt: 'LPQPAOBKBZI7JUWACF5D',               // contact.submitted_at
+  ipAddress: 'nwSwZl8W0HC50fXqtwxf',                 // contact.ip_address
+};
 
 export async function sendToGhlApi(lead: LeadData): Promise<BackendResult> {
   const config = backendConfig.ghlApi;
-  const cols = backendColumns.ghlApi;
 
   const nameParts = lead.fullName.split(' ');
   const firstName = nameParts[0] || lead.fullName;
   const lastName = nameParts.slice(1).join(' ') || '';
 
-  // Build custom fields array using mapped names (skip empty mappings)
-  const customFields: { key: string; field_value: string }[] = [];
-  
+  // Build custom fields array using GHL's internal field IDs (see note above)
   const customFieldEntries: [string, unknown][] = [
-    [cols.loanAmount, lead.loanAmount],
-    [cols.loanTerm, lead.loanTerm],
-    [cols.estimatedMonthlyPayment, lead.estimatedMonthlyPayment],
-    [cols.estimatedTotalCost, lead.estimatedTotalCost],
-    [cols.unsecuredTotal, lead.unsecuredTotal],
-    [cols.estimatedSavings, lead.estimatedSavings],
-    [cols.smsConsent, lead.smsConsent ? 'Yes' : 'No'],
-    [cols.communicationsConsent, lead.communicationsConsent ? 'Yes' : 'No'],
-    [cols.quoteId, lead.quoteId],
-    [cols.submittedAt, lead.submittedAt],
+    [GHL_FIELD_IDS.loanAmount, lead.loanAmount],
+    [GHL_FIELD_IDS.loanTerm, lead.loanTerm],
+    [GHL_FIELD_IDS.estimatedMonthlyPayment, lead.estimatedMonthlyPayment],
+    [GHL_FIELD_IDS.estimatedTotalCost, lead.estimatedTotalCost],
+    [GHL_FIELD_IDS.unsecuredTotal, lead.unsecuredTotal],
+    [GHL_FIELD_IDS.estimatedSavings, lead.estimatedSavings],
+    [GHL_FIELD_IDS.smsConsent, lead.smsConsent ? 'Yes' : 'No'],
+    [GHL_FIELD_IDS.communicationsConsent, lead.communicationsConsent ? 'Yes' : 'No'],
+    [GHL_FIELD_IDS.quoteId, lead.quoteId],
+    [GHL_FIELD_IDS.submittedAt, lead.submittedAt],
+    [GHL_FIELD_IDS.ipAddress, lead.ipAddress],
   ];
 
-  for (const [key, value] of customFieldEntries) {
-    if (key && key.trim() !== '') {
-      customFields.push({ key, field_value: String(value) });
-    }
-  }
+  const customFields = customFieldEntries
+    .filter(([id, value]) => id && value !== undefined && value !== null && value !== '')
+    .map(([id, value]) => ({ id, value: String(value) }));
 
   try {
     const response = await fetch('https://services.leadconnectorhq.com/contacts/', {

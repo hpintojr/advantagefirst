@@ -1,7 +1,7 @@
 /**
- * ═══════════════════════════════════════════════════════════════════
+ * ══════════════════════════════════════════════════════════════════════
  *  BACKEND COLUMNS — Per-Backend Field Name Mapping
- * ═══════════════════════════════════════════════════════════════════
+ * ══════════════════════════════════════════════════════════════════════
  * 
  *  This file controls what each lead data field is CALLED when it
  *  gets sent to each backend. Every backend can use different names.
@@ -20,7 +20,7 @@
  *     lead data from the calculator
  * 
  *  Set a field to '' (empty string) to exclude it from that backend.
- * ═══════════════════════════════════════════════════════════════════
+ * ══════════════════════════════════════════════════════════════════════
  */
 
 export interface FieldMapping {
@@ -48,13 +48,14 @@ export interface FieldMapping {
   quoteId: string;
   submittedAt: string;
   source: string;
+  ipAddress: string;
 }
 
 export const backendColumns: Record<string, FieldMapping> = {
 
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────
   //  SUPABASE — Column names in your Supabase 'leads' table
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────
   supabase: {
     fullName:                 'full_name',
     firstName:                'first_name',
@@ -73,11 +74,12 @@ export const backendColumns: Record<string, FieldMapping> = {
     quoteId:                  'quote_id',
     submittedAt:              'submitted_at',
     source:                   'source',
+    ipAddress:                'ip_address',
   },
 
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────
   //  GHL INBOUND WEBHOOK — Field names in the webhook payload
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────
   ghlWebhook: {
     fullName:                 'full_name',
     firstName:                'first_name',
@@ -96,9 +98,10 @@ export const backendColumns: Record<string, FieldMapping> = {
     quoteId:                  'quote_id',
     submittedAt:              'submitted_at',
     source:                   'source',
+    ipAddress:                'ip_address',
   },
 
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────
   //  GHL CONTACTS API — Field names for contact creation
   //
   //  Verified against the live "Loan Streamline Pro" location's custom
@@ -106,8 +109,12 @@ export const backendColumns: Record<string, FieldMapping> = {
   //  in GHL → Settings → Custom Fields (Contact object, Additional Info
   //  folder) and mapped to their live field keys below, alongside the
   //  pre-existing "Debt Amount" field (contact.debt_amount) that
-  //  unsecuredTotal reuses.
-  // ─────────────────────────────────────────────────────────────────
+  //  unsecuredTotal reuses. NOTE: these key-style names are used for
+  //  display/reference only — lib/backends/ghl-api.ts actually sends
+  //  custom fields by internal field id, since the Contacts API create
+  //  endpoint silently drops key-addressed customFields (confirmed
+  //  2026-08-27).
+  // ─────────────────────────────────────────────────────
   ghlApi: {
     fullName:                 'full_name',
     firstName:                'firstName',
@@ -126,9 +133,10 @@ export const backendColumns: Record<string, FieldMapping> = {
     quoteId:                  'contact.quote_id',
     submittedAt:              'contact.submitted_at',
     source:                   'source',
+    ipAddress:                'contact.ip_address',
   },
 
-  // ─────────────────────────────────────────────────────────────────
+  // ─────────────────────────────────────────────────────
   //  SALESFORCE — Field names for Lead object
   //
   //  Verified against the live Advantage First Financial Lead object
@@ -141,7 +149,8 @@ export const backendColumns: Record<string, FieldMapping> = {
   //  unsecuredTotal reuses the existing Total_Estimated_Debt__c field,
   //  and quoteId reuses the existing Applicant_Reference_ID__c field —
   //  both were already on the object and are a good semantic fit.
-  // ─────────────────────────────────────────────────────────────────
+  //  IP_Address__c was added 2026-08-27 to capture the submitter IP.
+  // ─────────────────────────────────────────────────────
   salesforce: {
     fullName:                 '',
     firstName:                'FirstName',
@@ -160,6 +169,7 @@ export const backendColumns: Record<string, FieldMapping> = {
     quoteId:                  'Applicant_Reference_ID__c',
     submittedAt:              '',
     source:                   'Source_URL__c',
+    ipAddress:                'IP_Address__c',
   },
 
 };
@@ -196,6 +206,7 @@ export function mapLeadToBackend(lead: LeadData, backendKey: string): Record<str
     quoteId:                  lead.quoteId,
     submittedAt:              lead.submittedAt,
     source:                   lead.source,
+    ipAddress:                lead.ipAddress,
   };
 
   const result: Record<string, unknown> = {};

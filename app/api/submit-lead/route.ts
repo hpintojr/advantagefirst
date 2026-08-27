@@ -4,7 +4,7 @@
  * Receives lead data from the SavingsEstimator calculator,
  * then routes it to all enabled backends via the multi-pipe router.
  * 
- * API keys and connection strings never touch the client — they stay
+ * API keys and connection strings never touch the client -- they stay
  * server-side in backendconnect.ts.
  */
 
@@ -15,6 +15,14 @@ import { routeLeadToBackends } from '@/lib/backends';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+
+    // Capture submitter IP. Vercel puts the real client IP in
+    // x-forwarded-for (first entry in the list); x-real-ip is a fallback
+    // for other proxies/local dev.
+    const forwardedFor = request.headers.get('x-forwarded-for');
+    const ipAddress = forwardedFor
+      ? forwardedFor.split(',')[0].trim()
+      : request.headers.get('x-real-ip') || '';
 
     // Validate required fields
     const required = ['fullName', 'phone', 'email', 'state', 'loanAmount', 'loanTerm'];
@@ -44,6 +52,7 @@ export async function POST(request: NextRequest) {
       quoteId: Number(body.quoteId) || 0,
       submittedAt: new Date().toISOString(),
       source: 'advantagefirst.com/calculator',
+      ipAddress,
     };
 
     // Route to all enabled backends

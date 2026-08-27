@@ -28,6 +28,7 @@ export interface LeadData {
   quoteId: number;
   submittedAt: string;     // ISO 8601 timestamp
   source: string;           // e.g. 'advantagefirst.com/calculator'
+  ipAddress: string;        // captured server-side from request headers
 }
 
 export interface BackendResult {
