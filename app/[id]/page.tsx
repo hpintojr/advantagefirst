@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ShieldCheck, Star, BadgeCheck } from 'lucide-react';
+import { ShieldCheck, Star, BadgeCheck, Phone } from 'lucide-react';
 import QualificationForm from '@/components/QualificationForm';
 import { fetchLeadByUniqueId, isValidUniqueId } from '@/lib/qualification';
 
@@ -41,10 +41,19 @@ export default async function LeadQualificationPage({
     <main className="min-h-screen bg-mesh-hero">
       {/* ── Header / Trust bar (light, no logo) ── */}
       <header className="border-b border-pv-line bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-md flex-col items-center px-4 py-4 sm:max-w-lg">
-          <p className="font-display text-lg font-black tracking-tight text-af-navy">
-            Advantage First Financial
-          </p>
+        <div className="mx-auto max-w-md px-4 py-4 sm:max-w-lg">
+          <div className="flex items-center justify-between">
+            <p className="font-display text-lg font-black tracking-tight text-af-navy">
+              Advantage First Financial
+            </p>
+            <a
+              href="tel:+19496695546"
+              className="flex items-center gap-1.5 text-sm font-bold text-af-blue hover:underline"
+            >
+              <Phone className="h-4 w-4" fill="currentColor" />
+              (949) 669-5546
+            </a>
+          </div>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-pv-muted">
             <span className="flex items-center gap-1">
               <Star className="h-3.5 w-3.5 text-trust-green" fill="currentColor" />

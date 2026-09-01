@@ -5,11 +5,12 @@ import { Pencil, Loader2, Phone } from 'lucide-react';
 import type { PrefillLead } from '@/lib/qualification';
 
 /**
- * QualificationForm — masked, pre-filled confirmation + qualifying questions.
+ * QualificationForm — RocketLoans-style multi-step wizard.
+ * One question-card per screen, progress bar + time estimate,
+ * conversational headlines, prefilled + masked contact info.
  *
- * EDIT QUESTIONS HERE: all dropdown options live in the constants below,
- * mirroring the CRM field values exactly. Keep values identical to the
- * GHL / Salesforce picklists so downstream mapping is 1:1.
+ * EDIT QUESTIONS HERE: dropdown options live in the constants below,
+ * mirroring the CRM picklists exactly so downstream mapping is 1:1.
  */
 
 // ─── Question options (mirror CRM picklists exactly) ─────────
@@ -60,7 +61,6 @@ const US_STATES = [
   'VA','WA','WV','WI','WY','DC',
 ];
 
-// Statuses that use employer / pay details
 const EMPLOYED_STATUSES = ['Employed', 'Self Employed'];
 
 // Results-page call line
@@ -72,6 +72,8 @@ const LOAN_MIN = 1000;
 const LOAN_MAX = 100000;
 const LOAN_STEP = 500;
 const LOAN_DEFAULT = 25000;
+
+const TOTAL_STEPS = 6;
 
 const fmtUSD = (n: number) =>
   new Intl.NumberFormat('en-US', {
@@ -94,12 +96,13 @@ const maskEmail = (email: string) => {
   return `${local.charAt(0)}***@${domain}`;
 };
 
-// ─── Shared styles ─────────────────────────────────────────────
-const inputCls =
-  'w-full rounded-lg border border-pv-line bg-white p-3 text-pv-text placeholder:text-pv-muted/60 focus:border-af-blue focus:outline-none focus:ring-2 focus:ring-af-blue/30';
-const labelCls = 'mb-1 block text-sm font-semibold text-af-navy';
-const sectionTitleCls =
-  'font-display text-base font-bold uppercase tracking-wide text-af-blue';
+// ─── Shared styles (Rocket-style filled fields) ──────────────────
+const fieldWrap =
+  'rounded-xl bg-pv-surface px-4 py-2.5 focus-within:ring-2 focus-within:ring-af-blue/40';
+const fieldLabel = 'block text-xs font-semibold text-pv-muted';
+const fieldInput =
+  'w-full bg-transparent pt-0.5 text-pv-text placeholder:text-pv-muted/50 focus:outline-none';
+const headlineCls = 'font-display text-2xl font-black leading-snug text-af-navy';
 
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
@@ -125,6 +128,7 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
     state: lead.state,
     zipCode: lead.zipCode,
   });
+  const [step, setStep] = useState(0);
   const [editingPhone, setEditingPhone] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
@@ -136,8 +140,52 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
   const isRenting = form.rentOrOwn === 'Rent';
   const isEmployed = EMPLOYED_STATUSES.includes(form.employmentStatus);
 
+  const canContinue = (() => {
+    switch (step) {
+      case 0:
+        return Boolean(form.loanPurpose);
+      case 1:
+        return true;
+      case 2:
+        return Boolean(form.phone.trim() && form.email.trim());
+      case 3:
+        return Boolean(
+          form.rentOrOwn &&
+            form.timeAtResidency &&
+            (!isRenting || form.monthlyRent.trim() !== '')
+        );
+      case 4:
+        return Boolean(
+          form.employmentStatus &&
+            form.annualIncome.trim() !== '' &&
+            (!isEmployed ||
+              (form.employerName.trim() && form.payFrequency && form.timeEmployed))
+        );
+      case 5:
+        return Boolean(
+          form.addressLine1.trim() &&
+            form.city.trim() &&
+            form.state &&
+            /^[0-9]{5}(-[0-9]{4})?$/.test(form.zipCode.trim())
+        );
+      default:
+        return false;
+    }
+  })();
+
+  const next = () => {
+    if (!canContinue) return;
+    setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  const back = () => {
+    setStep((s) => Math.max(s - 1, 0));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!canContinue) return;
     setStatus('submitting');
     try {
       const res = await fetch('/api/qualify-lead', {
@@ -220,419 +268,496 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
     );
   }
 
+  const remaining = TOTAL_STEPS - step;
+  const minutesLeft = remaining >= 4 ? 2 : 1;
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 p-6">
-      {/* ── Step 1: Contact info (masked + editable) ── */}
-      <fieldset className="space-y-4">
-        <legend className={sectionTitleCls}>Step 1 · Verify Your Contact Info</legend>
-
-        <div>
-          <label className={labelCls}>Full Name</label>
-          <div className="rounded-lg border border-pv-line bg-pv-surface/60 p-3 font-semibold text-pv-text">
-            {lead.firstName} {lead.lastName}
-          </div>
+    <form onSubmit={handleSubmit} className="p-6">
+      {/* ── Progress bar + time estimate ── */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-semibold text-pv-muted">
+            Step {step + 1} of {TOTAL_STEPS}
+          </span>
+          <span className="text-xs text-pv-muted">
+            About {minutesLeft} minute{minutesLeft > 1 ? 's' : ''} left
+          </span>
         </div>
-
-        <div>
-          <label htmlFor="phone" className={labelCls}>
-            Phone Number
-          </label>
-          {!editingPhone ? (
-            <div className="flex items-center justify-between rounded-lg border border-pv-line bg-pv-surface/60 p-3">
-              <span className="tracking-wide text-pv-text">{maskPhone(lead.phone)}</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingPhone(true);
-                  setForm((f) => ({ ...f, phone: '' }));
-                }}
-                className="flex items-center gap-1 text-sm font-semibold text-af-blue hover:underline"
-              >
-                <Pencil className="h-3.5 w-3.5" /> Update
-              </button>
-            </div>
-          ) : (
-            <input
-              id="phone"
-              type="tel"
-              name="phone"
-              value={form.phone}
-              onChange={set}
-              placeholder="(555) 555-1234"
-              autoComplete="tel"
-              inputMode="tel"
-              className={inputCls}
-              required
-            />
-          )}
-        </div>
-
-        <div>
-          <label htmlFor="email" className={labelCls}>
-            Email Address
-          </label>
-          {!editingEmail ? (
-            <div className="flex items-center justify-between rounded-lg border border-pv-line bg-pv-surface/60 p-3">
-              <span className="text-pv-text">{maskEmail(lead.email)}</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setEditingEmail(true);
-                  setForm((f) => ({ ...f, email: '' }));
-                }}
-                className="flex items-center gap-1 text-sm font-semibold text-af-blue hover:underline"
-              >
-                <Pencil className="h-3.5 w-3.5" /> Update
-              </button>
-            </div>
-          ) : (
-            <input
-              id="email"
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={set}
-              placeholder="you@example.com"
-              autoComplete="email"
-              className={inputCls}
-              required
-            />
-          )}
-        </div>
-      </fieldset>
-
-      {/* ── Step 2: Qualification details ── */}
-      <fieldset className="space-y-4 border-t border-pv-line pt-6">
-        <legend className={`${sectionTitleCls} pt-6`}>
-          Step 2 · Qualification Details
-        </legend>
-
-        <div>
-          <label htmlFor="loanPurpose" className={labelCls}>
-            Loan Purpose
-          </label>
-          <select
-            id="loanPurpose"
-            name="loanPurpose"
-            value={form.loanPurpose}
-            onChange={set}
-            className={inputCls}
-            required
-          >
-            <option value="">Select one…</option>
-            {LOAN_PURPOSES.map((o) => (
-              <option key={o} value={o}>
-                {o}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <div className="mb-1 flex items-baseline justify-between">
-            <label htmlFor="loanAmount" className={labelCls}>
-              Loan Amount
-            </label>
-            <span className="font-display text-xl font-black text-af-blue">
-              {fmtUSD(Number(form.loanAmount))}
-            </span>
-          </div>
-          <input
-            id="loanAmount"
-            type="range"
-            name="loanAmount"
-            value={form.loanAmount}
-            onChange={set}
-            min={LOAN_MIN}
-            max={LOAN_MAX}
-            step={LOAN_STEP}
-            className="h-2 w-full cursor-pointer appearance-none rounded-full bg-pv-line accent-af-blue"
-            required
+        <div className="mt-2 h-1.5 w-full rounded-full bg-pv-line">
+          <div
+            className="h-1.5 rounded-full bg-af-red transition-all duration-300"
+            style={{ width: `${((step + 1) / TOTAL_STEPS) * 100}%` }}
           />
-          <div className="mt-1 flex justify-between text-xs text-pv-muted">
-            <span>{fmtUSD(LOAN_MIN)}</span>
-            <span>{fmtUSD(LOAN_MAX)}+</span>
-          </div>
         </div>
+      </div>
 
-        <div className={`grid gap-4 ${isRenting ? 'grid-cols-2' : 'grid-cols-1'}`}>
-          <div>
-            <label htmlFor="rentOrOwn" className={labelCls}>
-              Rent or Own
-            </label>
-            <select
-              id="rentOrOwn"
-              name="rentOrOwn"
-              value={form.rentOrOwn}
+      <div className="space-y-5">
+        {/* ── Step 1: Loan purpose ── */}
+        {step === 0 && (
+          <>
+            <h2 className={headlineCls}>
+              Hi {lead.firstName}. What&apos;s this loan for today?
+            </h2>
+            <p className="text-sm text-pv-muted">
+              Filling out the form won&apos;t affect your credit score.
+            </p>
+            <div className={fieldWrap}>
+              <label htmlFor="loanPurpose" className={fieldLabel}>
+                Loan purpose
+              </label>
+              <select
+                id="loanPurpose"
+                name="loanPurpose"
+                value={form.loanPurpose}
+                onChange={set}
+                className={fieldInput}
+              >
+                <option value="">Select one…</option>
+                {LOAN_PURPOSES.map((o) => (
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </>
+        )}
+
+        {/* ── Step 2: Loan amount ── */}
+        {step === 1 && (
+          <>
+            <h2 className={headlineCls}>How much would you like to borrow?</h2>
+            <p className="text-center font-display text-4xl font-black text-af-blue">
+              {fmtUSD(Number(form.loanAmount))}
+            </p>
+            <input
+              id="loanAmount"
+              type="range"
+              name="loanAmount"
+              value={form.loanAmount}
               onChange={set}
-              className={inputCls}
-              required
-            >
-              <option value="">Select one…</option>
-              {RENT_OR_OWN.map((o) => (
-                <option key={o} value={o}>
-                  {o}
-                </option>
-              ))}
-            </select>
-          </div>
-          {isRenting && (
-            <div>
-              <label htmlFor="monthlyRent" className={labelCls}>
-                Monthly Rent
+              min={LOAN_MIN}
+              max={LOAN_MAX}
+              step={LOAN_STEP}
+              className="h-2 w-full cursor-pointer appearance-none rounded-full bg-pv-line accent-af-blue"
+            />
+            <div className="flex justify-between text-xs text-pv-muted">
+              <span>{fmtUSD(LOAN_MIN)}</span>
+              <span>{fmtUSD(LOAN_MAX)}+</span>
+            </div>
+          </>
+        )}
+
+        {/* ── Step 3: Contact confirm ── */}
+        {step === 2 && (
+          <>
+            <h2 className={headlineCls}>Let&apos;s confirm your contact info</h2>
+            <div className={fieldWrap}>
+              <span className={fieldLabel}>Full name</span>
+              <p className="pt-0.5 font-semibold text-pv-text">
+                {lead.firstName} {lead.lastName}
+              </p>
+            </div>
+
+            {!editingPhone ? (
+              <div className={`${fieldWrap} flex items-center justify-between`}>
+                <div>
+                  <span className={fieldLabel}>Phone number</span>
+                  <p className="pt-0.5 tracking-wide text-pv-text">
+                    {maskPhone(lead.phone)}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingPhone(true);
+                    setForm((f) => ({ ...f, phone: '' }));
+                  }}
+                  className="flex items-center gap-1 text-sm font-semibold text-af-blue hover:underline"
+                >
+                  <Pencil className="h-3.5 w-3.5" /> Update
+                </button>
+              </div>
+            ) : (
+              <div className={fieldWrap}>
+                <label htmlFor="phone" className={fieldLabel}>
+                  Phone number
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  name="phone"
+                  value={form.phone}
+                  onChange={set}
+                  placeholder="555-867-5309"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  className={fieldInput}
+                />
+              </div>
+            )}
+
+            {!editingEmail ? (
+              <div className={`${fieldWrap} flex items-center justify-between`}>
+                <div>
+                  <span className={fieldLabel}>Email</span>
+                  <p className="pt-0.5 text-pv-text">{maskEmail(lead.email)}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingEmail(true);
+                    setForm((f) => ({ ...f, email: '' }));
+                  }}
+                  className="flex items-center gap-1 text-sm font-semibold text-af-blue hover:underline"
+                >
+                  <Pencil className="h-3.5 w-3.5" /> Update
+                </button>
+              </div>
+            ) : (
+              <div className={fieldWrap}>
+                <label htmlFor="email" className={fieldLabel}>
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={set}
+                  placeholder="example@domain.com"
+                  autoComplete="email"
+                  className={fieldInput}
+                />
+              </div>
+            )}
+          </>
+        )}
+
+        {/* ── Step 4: Housing ── */}
+        {step === 3 && (
+          <>
+            <h2 className={headlineCls}>Tell us about your housing</h2>
+            <div className={fieldWrap}>
+              <label htmlFor="rentOrOwn" className={fieldLabel}>
+                Rent or own
+              </label>
+              <select
+                id="rentOrOwn"
+                name="rentOrOwn"
+                value={form.rentOrOwn}
+                onChange={set}
+                className={fieldInput}
+              >
+                <option value="">Select one…</option>
+                {RENT_OR_OWN.map((o) => (
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
+                ))}
+              </select>
+            </div>
+            {isRenting && (
+              <div className={fieldWrap}>
+                <label htmlFor="monthlyRent" className={fieldLabel}>
+                  Monthly rent
+                </label>
+                <input
+                  id="monthlyRent"
+                  type="number"
+                  name="monthlyRent"
+                  value={form.monthlyRent}
+                  onChange={set}
+                  min={0}
+                  inputMode="numeric"
+                  className={fieldInput}
+                />
+              </div>
+            )}
+            <div className={fieldWrap}>
+              <label htmlFor="timeAtResidency" className={fieldLabel}>
+                Time at residence
+              </label>
+              <select
+                id="timeAtResidency"
+                name="timeAtResidency"
+                value={form.timeAtResidency}
+                onChange={set}
+                className={fieldInput}
+              >
+                <option value="">Select one…</option>
+                {TIME_AT_RESIDENCY.map((o) => (
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </>
+        )}
+
+        {/* ── Step 5: Employment & income ── */}
+        {step === 4 && (
+          <>
+            <h2 className={headlineCls}>Your employment and income</h2>
+            <div className={fieldWrap}>
+              <label htmlFor="employmentStatus" className={fieldLabel}>
+                Employment status
+              </label>
+              <select
+                id="employmentStatus"
+                name="employmentStatus"
+                value={form.employmentStatus}
+                onChange={set}
+                className={fieldInput}
+              >
+                <option value="">Select one…</option>
+                {EMPLOYMENT_STATUSES.map((o) => (
+                  <option key={o} value={o}>
+                    {o}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={fieldWrap}>
+              <label htmlFor="annualIncome" className={fieldLabel}>
+                Annual income
               </label>
               <input
-                id="monthlyRent"
+                id="annualIncome"
                 type="number"
-                name="monthlyRent"
-                value={form.monthlyRent}
+                name="annualIncome"
+                value={form.annualIncome}
                 onChange={set}
                 min={0}
                 inputMode="numeric"
-                className={inputCls}
-                required
+                placeholder="55000"
+                className={fieldInput}
               />
             </div>
-          )}
-        </div>
+            {isEmployed && (
+              <>
+                <div className={fieldWrap}>
+                  <label htmlFor="employerName" className={fieldLabel}>
+                    Employer name
+                  </label>
+                  <input
+                    id="employerName"
+                    type="text"
+                    name="employerName"
+                    value={form.employerName}
+                    onChange={set}
+                    autoComplete="organization"
+                    className={fieldInput}
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className={fieldWrap}>
+                    <label htmlFor="payFrequency" className={fieldLabel}>
+                      Pay frequency
+                    </label>
+                    <select
+                      id="payFrequency"
+                      name="payFrequency"
+                      value={form.payFrequency}
+                      onChange={set}
+                      className={fieldInput}
+                    >
+                      <option value="">Select…</option>
+                      {PAY_FREQUENCIES.map((o) => (
+                        <option key={o} value={o}>
+                          {o}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className={fieldWrap}>
+                    <label htmlFor="timeEmployed" className={fieldLabel}>
+                      Time employed
+                    </label>
+                    <select
+                      id="timeEmployed"
+                      name="timeEmployed"
+                      value={form.timeEmployed}
+                      onChange={set}
+                      className={fieldInput}
+                    >
+                      <option value="">Select…</option>
+                      {TIME_EMPLOYED.map((o) => (
+                        <option key={o} value={o}>
+                          {o}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
 
-        <div>
-          <label htmlFor="timeAtResidency" className={labelCls}>
-            Time at Residence
-          </label>
-          <select
-            id="timeAtResidency"
-            name="timeAtResidency"
-            value={form.timeAtResidency}
-            onChange={set}
-            className={inputCls}
-            required
-          >
-            <option value="">Select one…</option>
-            {TIME_AT_RESIDENCY.map((o) => (
-              <option key={o} value={o}>
-                {o}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label htmlFor="employmentStatus" className={labelCls}>
-              Employment Status
-            </label>
-            <select
-              id="employmentStatus"
-              name="employmentStatus"
-              value={form.employmentStatus}
-              onChange={set}
-              className={inputCls}
-              required
-            >
-              <option value="">Select one…</option>
-              {EMPLOYMENT_STATUSES.map((o) => (
-                <option key={o} value={o}>
-                  {o}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="annualIncome" className={labelCls}>
-              Annual Income
-            </label>
-            <input
-              id="annualIncome"
-              type="number"
-              name="annualIncome"
-              value={form.annualIncome}
-              onChange={set}
-              min={0}
-              inputMode="numeric"
-              placeholder="55000"
-              className={inputCls}
-              required
-            />
-          </div>
-        </div>
-
-        {isEmployed && (
+        {/* ── Step 6: Address + submit ── */}
+        {step === 5 && (
           <>
-            <div>
-              <label htmlFor="employerName" className={labelCls}>
-                Employer Name
+            <h2 className={headlineCls}>Last step — confirm your address</h2>
+            <div className={fieldWrap}>
+              <label htmlFor="addressLine1" className={fieldLabel}>
+                Street address
               </label>
               <input
-                id="employerName"
+                id="addressLine1"
                 type="text"
-                name="employerName"
-                value={form.employerName}
+                name="addressLine1"
+                value={form.addressLine1}
                 onChange={set}
-                autoComplete="organization"
-                className={inputCls}
-                required
+                autoComplete="address-line1"
+                className={fieldInput}
+              />
+            </div>
+            <div className={fieldWrap}>
+              <label htmlFor="addressLine2" className={fieldLabel}>
+                Apartment, suite, etc (optional)
+              </label>
+              <input
+                id="addressLine2"
+                type="text"
+                name="addressLine2"
+                value={form.addressLine2}
+                onChange={set}
+                autoComplete="address-line2"
+                className={fieldInput}
+              />
+            </div>
+            <div className={fieldWrap}>
+              <label htmlFor="city" className={fieldLabel}>
+                City
+              </label>
+              <input
+                id="city"
+                type="text"
+                name="city"
+                value={form.city}
+                onChange={set}
+                autoComplete="address-level2"
+                className={fieldInput}
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="payFrequency" className={labelCls}>
-                  Pay Frequency
+              <div className={fieldWrap}>
+                <label htmlFor="state" className={fieldLabel}>
+                  State
                 </label>
                 <select
-                  id="payFrequency"
-                  name="payFrequency"
-                  value={form.payFrequency}
+                  id="state"
+                  name="state"
+                  value={form.state}
                   onChange={set}
-                  className={inputCls}
-                  required
+                  autoComplete="address-level1"
+                  className={fieldInput}
                 >
-                  <option value="">Select one…</option>
-                  {PAY_FREQUENCIES.map((o) => (
-                    <option key={o} value={o}>
-                      {o}
+                  <option value="">Select…</option>
+                  {US_STATES.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
                     </option>
                   ))}
                 </select>
               </div>
-              <div>
-                <label htmlFor="timeEmployed" className={labelCls}>
-                  Time Employed
+              <div className={fieldWrap}>
+                <label htmlFor="zipCode" className={fieldLabel}>
+                  ZIP code
                 </label>
-                <select
-                  id="timeEmployed"
-                  name="timeEmployed"
-                  value={form.timeEmployed}
+                <input
+                  id="zipCode"
+                  type="text"
+                  name="zipCode"
+                  value={form.zipCode}
                   onChange={set}
-                  className={inputCls}
-                  required
-                >
-                  <option value="">Select one…</option>
-                  {TIME_EMPLOYED.map((o) => (
-                    <option key={o} value={o}>
-                      {o}
-                    </option>
-                  ))}
-                </select>
+                  autoComplete="postal-code"
+                  inputMode="numeric"
+                  maxLength={10}
+                  className={fieldInput}
+                />
               </div>
             </div>
+            <p className="text-xs leading-relaxed text-pv-muted">
+              By submitting, you agree to our{' '}
+              <a
+                href="https://www.advantagefirst.com/privacy"
+                className="underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Privacy Policy
+              </a>{' '}
+              and{' '}
+              <a
+                href="https://www.advantagefirst.com/terms-of-use"
+                className="underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Terms of Use
+              </a>
+              , and consent to be contacted by Advantage First Financial at the
+              number provided, including by autodialed or prerecorded calls and
+              texts. Consent is not a condition of any purchase. See our{' '}
+              <a
+                href="https://www.advantagefirst.com/sms-terms"
+                className="underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                SMS Terms
+              </a>
+              .
+            </p>
           </>
         )}
-      </fieldset>
 
-      {/* ── Step 3: Address ── */}
-      <fieldset className="space-y-4 border-t border-pv-line pt-6">
-        <legend className={`${sectionTitleCls} pt-6`}>Step 3 · Confirm Address</legend>
+        {/* ── Error ── */}
+        {status === 'error' && (
+          <p className="rounded-lg bg-af-red-light p-3 text-center text-sm font-semibold text-af-red">
+            Something went wrong submitting your information. Please try again.
+          </p>
+        )}
 
-        <div>
-          <label htmlFor="addressLine1" className={labelCls}>
-            Street Address
-          </label>
-          <input
-            id="addressLine1"
-            type="text"
-            name="addressLine1"
-            value={form.addressLine1}
-            onChange={set}
-            autoComplete="address-line1"
-            className={inputCls}
-            required
-          />
-        </div>
-
-        <div>
-          <label htmlFor="addressLine2" className={labelCls}>
-            Apt, Suite, Unit <span className="font-normal text-pv-muted">(optional)</span>
-          </label>
-          <input
-            id="addressLine2"
-            type="text"
-            name="addressLine2"
-            value={form.addressLine2}
-            onChange={set}
-            autoComplete="address-line2"
-            className={inputCls}
-          />
-        </div>
-
-        <div className="grid grid-cols-6 gap-4">
-          <div className="col-span-3">
-            <label htmlFor="city" className={labelCls}>
-              City
-            </label>
-            <input
-              id="city"
-              type="text"
-              name="city"
-              value={form.city}
-              onChange={set}
-              autoComplete="address-level2"
-              className={inputCls}
-              required
-            />
-          </div>
-          <div className="col-span-1">
-            <label htmlFor="state" className={labelCls}>
-              State
-            </label>
-            <select
-              id="state"
-              name="state"
-              value={form.state}
-              onChange={set}
-              autoComplete="address-level1"
-              className={`${inputCls} px-2`}
-              required
-            >
-              <option value="">--</option>
-              {US_STATES.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="col-span-2">
-            <label htmlFor="zipCode" className={labelCls}>
-              ZIP Code
-            </label>
-            <input
-              id="zipCode"
-              type="text"
-              name="zipCode"
-              value={form.zipCode}
-              onChange={set}
-              autoComplete="postal-code"
-              inputMode="numeric"
-              pattern="[0-9]{5}(-[0-9]{4})?"
-              maxLength={10}
-              className={inputCls}
-              required
-            />
-          </div>
-        </div>
-      </fieldset>
-
-      {/* ── CTA ── */}
-      {status === 'error' && (
-        <p className="rounded-lg bg-af-red-light p-3 text-center text-sm font-semibold text-af-red">
-          Something went wrong submitting your information. Please try again.
-        </p>
-      )}
-
-      <button
-        type="submit"
-        disabled={status === 'submitting'}
-        className="glow-btn flex w-full items-center justify-center gap-2 rounded-full bg-af-red py-4 font-display text-lg font-bold text-white transition-colors hover:bg-af-red-hover disabled:opacity-60"
-      >
-        {status === 'submitting' ? (
-          <>
-            <Loader2 className="h-5 w-5 animate-spin" /> Submitting…
-          </>
+        {/* ── CTA + Back ── */}
+        {step < TOTAL_STEPS - 1 ? (
+          <button
+            type="button"
+            onClick={next}
+            disabled={!canContinue}
+            className="glow-btn flex w-full items-center justify-center gap-2 rounded-full bg-af-red py-4 font-display text-lg font-bold text-white transition-colors hover:bg-af-red-hover disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {step === 0 ? "Let's go" : 'Continue'}
+          </button>
         ) : (
-          <>Confirm &amp; See My Offers →</>
+          <button
+            type="submit"
+            disabled={!canContinue || status === 'submitting'}
+            className="glow-btn flex w-full items-center justify-center gap-2 rounded-full bg-af-red py-4 font-display text-lg font-bold text-white transition-colors hover:bg-af-red-hover disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {status === 'submitting' ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" /> Submitting…
+              </>
+            ) : (
+              <>Confirm &amp; See My Offers →</>
+            )}
+          </button>
         )}
-      </button>
+
+        {step > 0 && (
+          <button
+            type="button"
+            onClick={back}
+            className="mx-auto block text-sm font-semibold text-pv-muted hover:text-af-navy hover:underline"
+          >
+            Back
+          </button>
+        )}
+      </div>
     </form>
   );
 }
