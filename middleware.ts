@@ -5,6 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
  *
  *   advantagefirst.com  → main site (landing page route blocked)
  *   adv1st.app          → ONLY serves /{unique_id} landing pages
+ *   *.vercel.app        → serves everything (testing)
  *
  * Place this file at the repo root (same level as /app).
  */
@@ -25,6 +26,9 @@ const ALWAYS_ALLOW = /^\/(api|_next|favicon\.ico|robots\.txt|images|fonts)/;
 
 const MAIN_SITE = 'https://advantagefirst.com';
 const SHORT_HOSTS = ['adv1st.app', 'www.adv1st.app'];
+// Landing pages are blocked ONLY on these hosts (so *.vercel.app previews
+// can still serve /{id} for testing).
+const MAIN_HOSTS = ['advantagefirst.com', 'www.advantagefirst.com'];
 
 export function middleware(req: NextRequest) {
   const host = req.headers.get('host') ?? '';
@@ -40,9 +44,9 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(MAIN_SITE, 302);
   }
 
-  // Main domain: block direct access to landing pages so the
-  // short domain is the only entry point for pre-filled forms.
-  if (isUniqueId(pathname)) {
+  // Main domain only: block direct access to landing pages so the
+  // short domain is the only public entry point for pre-filled forms.
+  if (MAIN_HOSTS.includes(host) && isUniqueId(pathname)) {
     return NextResponse.redirect(MAIN_SITE, 302);
   }
 
