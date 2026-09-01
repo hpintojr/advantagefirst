@@ -18,13 +18,18 @@
 import { BackendResult } from './leadTypes';
 import { backendConfig } from './backendconnect';
 
-// ─── Short code rules (must match middleware.ts and the Supabase generator) ───
+// ─── Short code rules (must match middleware.ts) ──────────────────
 
-/** 5 chars, alphanumeric, at least one digit. e.g. Kx9mQ */
-export const UNIQUE_ID_REGEX = /^(?=[a-zA-Z]*\d)[a-zA-Z0-9]{5}$/;
+/** 5 chars, alphanumeric (letters-only codes like JSYNB are valid). */
+export const UNIQUE_ID_REGEX = /^[a-zA-Z0-9]{5}$/;
+
+/** Real site paths that must never be treated as short codes. */
+const RESERVED_CODES = new Set([
+  'about','terms','legal','blogs','press','apply','loans','admin','login',
+]);
 
 export function isValidUniqueId(id: string): boolean {
-  return UNIQUE_ID_REGEX.test(id);
+  return UNIQUE_ID_REGEX.test(id) && !RESERVED_CODES.has(id.toLowerCase());
 }
 
 // ─── Qualification rules (single source of truth) ────────────────

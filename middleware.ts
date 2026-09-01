@@ -4,19 +4,20 @@ import { NextRequest, NextResponse } from 'next/server';
  * Hostname-based routing for the two-domain setup:
  *
  *   advantagefirst.com  → main site (landing page route blocked)
- *   adv1st.app          → ONLY serves /{unique_id} landing pages
+ *   adv1st.app          → ONLY serves /{short_code} landing pages
  *   *.vercel.app        → serves everything (testing)
  *
  * Place this file at the repo root (same level as /app).
  */
 
-// 5-char alphanumeric unique_id, e.g. /Kx9mQ
-// IMPORTANT: IDs must contain AT LEAST ONE DIGIT (enforced here and in the
-// ID generator) so real routes like /about or /terms never match.
-const UNIQUE_ID_PATH = /^\/(?=[a-zA-Z]*\d)[a-zA-Z0-9]{5}$/;
+// 5-char alphanumeric short_code, e.g. /Kx9mQ or /JSYNB (letters-only OK)
+const UNIQUE_ID_PATH = /^\/[a-zA-Z0-9]{5}$/;
 
-// Extra safety: never treat these as unique IDs even if they match the pattern
-const RESERVED = new Set(['about', 'terms', 'legal', 'blogs', 'faqs1']);
+// Real site paths that must never be treated as short codes
+const RESERVED = new Set([
+  'about', 'terms', 'legal', 'blogs', 'press', 'apply', 'loans', 'admin',
+  'login', 'faqs1',
+]);
 
 const isUniqueId = (pathname: string) =>
   UNIQUE_ID_PATH.test(pathname) && !RESERVED.has(pathname.slice(1).toLowerCase());
