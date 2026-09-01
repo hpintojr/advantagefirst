@@ -351,7 +351,9 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
         {step === 0 && (
           <>
             <h2 className={headlineCls}>
-              Hi {lead.firstName}. What&apos;s this loan for today?
+              Hi {lead.firstName}.
+              <br />
+              What&apos;s this loan for today?
             </h2>
             <p className="text-sm text-pv-muted">
               Filling out the form won&apos;t affect your credit score.
