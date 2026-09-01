@@ -73,11 +73,13 @@ const EMPLOYED_STATUSES = ['Employed', 'Self Employed'];
 const CALL_NOW_DISPLAY = '(949) 669-5546';
 const CALL_NOW_TEL = 'tel:+19496695546';
 
-// Loan amount slider bounds
-const LOAN_MIN = 7500;
+// Loan amount slider bounds (whole thousands; prefill rounds UP to nearest $1,000)
+const LOAN_MIN = 8000;
 const LOAN_MAX = 100000;
-const LOAN_STEP = 500;
+const LOAN_STEP = 1000;
 const LOAN_DEFAULT = 25000;
+
+const roundUp1000 = (n: number) => Math.ceil(n / 1000) * 1000;
 
 const TOTAL_STEPS = 6;
 
@@ -124,7 +126,10 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
     email: lead.email,
     loanPurpose: '',
     loanAmount: String(
-      Math.min(LOAN_MAX, Math.max(LOAN_MIN, lead.loanAmount ?? LOAN_DEFAULT))
+      Math.min(
+        LOAN_MAX,
+        Math.max(LOAN_MIN, roundUp1000(lead.loanAmount ?? LOAN_DEFAULT))
+      )
     ),
     rentOrOwn: '',
     monthlyRent: '',
