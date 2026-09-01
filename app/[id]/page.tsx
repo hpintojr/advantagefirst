@@ -89,7 +89,7 @@ export default async function LeadQualificationPage({
         </p>
         {lead.loanAmount ? (
           <p className="mt-1 font-display text-5xl font-black tracking-tight text-af-blue">
-            {fmtUSD(lead.loanAmount)}
+            {fmtUSD(Math.ceil(lead.loanAmount / 1000) * 1000)}
           </p>
         ) : null}
         <ul className="mx-auto mt-4 inline-flex flex-col gap-1.5 text-left text-sm text-pv-text">
