@@ -118,6 +118,13 @@ function ghlWebhookUrl(): string {
   );
 }
 
+function ghlApiCreds() {
+  return {
+    apiKey: process.env.GHL_API_KEY || backendConfig.ghlApi.apiKey || '',
+    locationId: process.env.GHL_LOCATION_ID || backendConfig.ghlApi.locationId || '',
+  };
+}
+
 // ─── Prefill lookup (server-side only, via RPC) ──────────────────
 
 export async function fetchLeadByUniqueId(id: string): Promise<PrefillLead | null> {
@@ -280,10 +287,75 @@ async function sendToGhl(sub: QualificationSubmission): Promise<BackendResult> {
   }
 }
 
+/**
+ * Direct GHL Contacts API push (no webhook required).
+ * Upserts the contact by email/phone, writes the qualification custom
+ * fields (which must exist in the location), and adds the result tag.
+ */
+async function sendToGhlApi(sub: QualificationSubmission): Promise<BackendResult> {
+  const { apiKey, locationId } = ghlApiCreds();
+  if (!apiKey || !locationId) {
+    return { backend: 'ghl-api', success: false, message: 'Skipped — missing apiKey or locationId' };
+  }
+
+  const customFields = [
+    { key: 'unique_id', field_value: sub.uniqueId },
+    { key: 'loan_purpose', field_value: sub.loanPurpose },
+    { key: 'loan_amount', field_value: String(sub.loanAmount) },
+    { key: 'rent_or_own', field_value: sub.rentOrOwn },
+    { key: 'monthly_rent', field_value: String(sub.monthlyRent) },
+    { key: 'time_at_residency', field_value: sub.timeAtResidency },
+    { key: 'annual_income', field_value: String(sub.annualIncome) },
+    { key: 'employment_status', field_value: sub.employmentStatus },
+    { key: 'employer_name', field_value: sub.employerName },
+    { key: 'pay_frequency', field_value: sub.payFrequency },
+    { key: 'time_employed', field_value: sub.timeEmployed },
+    { key: 'qualification_result', field_value: sub.result },
+    { key: 'decline_reason', field_value: sub.declineReason },
+  ];
+
+  try {
+    const res = await fetch('https://services.leadconnectorhq.com/contacts/upsert', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`,
+        Version: '2021-07-28',
+      },
+      body: JSON.stringify({
+        locationId,
+        email: sub.email,
+        phone: sub.phone,
+        address1: sub.addressLine1,
+        city: sub.city,
+        state: sub.state,
+        postalCode: sub.zipCode,
+        customFields,
+        tags: [sub.result === 'declined' ? 'declined' : 'qualified'],
+      }),
+    });
+    if (!res.ok) {
+      const text = await res.text();
+      return { backend: 'ghl-api', success: false, message: `HTTP ${res.status}: ${text}` };
+    }
+    return { backend: 'ghl-api', success: true, message: 'Contact upserted with qualification fields' };
+  } catch (err) {
+    return {
+      backend: 'ghl-api',
+      success: false,
+      message: `Error: ${err instanceof Error ? err.message : 'Unknown'}`,
+    };
+  }
+}
+
 export async function routeQualifiedLeadToBackends(
   sub: QualificationSubmission
 ): Promise<BackendResult[]> {
-  const settled = await Promise.allSettled([updateSupabase(sub), sendToGhl(sub)]);
+  const settled = await Promise.allSettled([
+    updateSupabase(sub),
+    sendToGhl(sub),
+    sendToGhlApi(sub),
+  ]);
   return settled.map((r) =>
     r.status === 'fulfilled'
       ? r.value
