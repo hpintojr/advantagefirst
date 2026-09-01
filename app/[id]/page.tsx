@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import { ShieldCheck, Star, BadgeCheck, Phone } from 'lucide-react';
 import QualificationForm from '@/components/QualificationForm';
+import QualificationDisclosures from '@/components/QualificationDisclosures';
 import { fetchLeadByUniqueId, isValidUniqueId } from '@/lib/qualification';
 
 /**
@@ -39,13 +41,18 @@ export default async function LeadQualificationPage({
 
   return (
     <main className="min-h-screen bg-mesh-hero">
-      {/* ── Header / Trust bar (light, no logo) ── */}
+      {/* ── Header / Trust bar ── */}
       <header className="border-b border-pv-line bg-white/90 backdrop-blur">
         <div className="mx-auto max-w-md px-4 py-4 sm:max-w-lg">
           <div className="flex items-center justify-between">
-            <p className="font-display text-lg font-black tracking-tight text-af-navy">
-              Advantage First Financial
-            </p>
+            <Image
+              src="/images/DT_Logo_tight.png"
+              alt="Advantage First Financial"
+              width={220}
+              height={48}
+              className="h-10 w-auto"
+              priority
+            />
             <a
               href="tel:+19496695546"
               className="flex items-center gap-1.5 text-sm font-bold text-af-blue hover:underline"
@@ -117,6 +124,9 @@ export default async function LeadQualificationPage({
           score.
         </p>
       </section>
+
+      {/* ── FCRA prescreen + lending disclosures ── */}
+      <QualificationDisclosures />
     </main>
   );
 }
