@@ -277,10 +277,10 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
             obligation — checking your options will not affect your credit score.
           </p>
 
-          <div className="mt-7 inline-block rounded-full bg-af-blue-ice px-6 py-2.5 font-display font-bold text-af-navy">
-            Pre-Qualified for:{' '}
-            <span className="text-af-blue">{fmtUSD(Number(form.loanAmount))}</span>
-          </div>
+          <p className="mt-8 font-display font-bold text-af-navy">Pre-Qualified for:</p>
+          <p className="mt-1 font-display text-6xl font-black tracking-tight text-af-blue">
+            {fmtUSD(Number(form.loanAmount))}
+          </p>
 
           <a
             href={CALL_NOW_TEL}
