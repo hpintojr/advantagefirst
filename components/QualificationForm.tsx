@@ -8,6 +8,7 @@ import type { PrefillLead } from '@/lib/qualification';
  * QualificationForm — RocketLoans-style multi-step wizard.
  * One question-card per screen, progress bar + time estimate,
  * conversational headlines, prefilled + masked contact info.
+ * Missing master data (e.g. no email) renders as an empty required input.
  *
  * Decline rules are enforced server-side in /api/qualify-lead; this
  * component just renders the declined page when the API says so.
@@ -165,7 +166,10 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
       case 1:
         return true;
       case 2:
-        return Boolean(form.phone.trim() && form.email.trim());
+        return Boolean(
+          form.phone.replace(/\D/g, '').length >= 10 &&
+            /^\S+@\S+\.\S+$/.test(form.email.trim())
+        );
       case 3:
         return Boolean(
           form.rentOrOwn &&
@@ -410,7 +414,7 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
           </>
         )}
 
-        {/* ── Step 3: Contact confirm ── */}
+        {/* ── Step 3: Contact confirm (missing values render as inputs) ── */}
         {step === 2 && (
           <>
             <h2 className={headlineCls}>Let&apos;s confirm your contact info</h2>
@@ -421,7 +425,7 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
               </p>
             </div>
 
-            {!editingPhone ? (
+            {!editingPhone && lead.phone ? (
               <div className={`${fieldWrap} flex items-center justify-between`}>
                 <div>
                   <span className={fieldLabel}>Phone number</span>
@@ -459,7 +463,7 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
               </div>
             )}
 
-            {!editingEmail ? (
+            {!editingEmail && lead.email ? (
               <div className={`${fieldWrap} flex items-center justify-between`}>
                 <div>
                   <span className={fieldLabel}>Email</span>
