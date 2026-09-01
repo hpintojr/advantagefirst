@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
 import { ShieldCheck, Star, BadgeCheck } from 'lucide-react';
 import QualificationForm from '@/components/QualificationForm';
 import { fetchLeadByUniqueId, isValidUniqueId } from '@/lib/qualification';
@@ -40,30 +39,23 @@ export default async function LeadQualificationPage({
 
   return (
     <main className="min-h-screen bg-mesh-hero">
-      {/* ── Header / Trust bar ── */}
-      <header className="bg-mesh-dark">
-        <div className="mx-auto flex max-w-md flex-col items-center px-4 py-6 sm:max-w-lg">
-          <Image
-            src="/images/torch_logo.png"
-            alt="Advantage First Financial"
-            width={56}
-            height={56}
-            priority
-          />
-          <p className="mt-2 font-display text-lg font-bold text-white">
+      {/* ── Header / Trust bar (light, no logo) ── */}
+      <header className="border-b border-pv-line bg-white/90 backdrop-blur">
+        <div className="mx-auto flex max-w-md flex-col items-center px-4 py-4 sm:max-w-lg">
+          <p className="font-display text-lg font-black tracking-tight text-af-navy">
             Advantage First Financial
           </p>
-          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-white/80">
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-pv-muted">
             <span className="flex items-center gap-1">
               <Star className="h-3.5 w-3.5 text-trust-green" fill="currentColor" />
               4.9/5 on Trustpilot
             </span>
             <span className="flex items-center gap-1">
-              <BadgeCheck className="h-3.5 w-3.5 text-af-blue-cyan" />
+              <BadgeCheck className="h-3.5 w-3.5 text-af-blue" />
               A+ Rating
             </span>
             <span className="flex items-center gap-1">
-              <ShieldCheck className="h-3.5 w-3.5 text-af-blue-cyan" />
+              <ShieldCheck className="h-3.5 w-3.5 text-af-blue" />
               10 Years in Business
             </span>
           </div>

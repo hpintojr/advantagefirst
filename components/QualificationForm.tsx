@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CheckCircle2, Pencil, Loader2 } from 'lucide-react';
+import { Pencil, Loader2, Phone } from 'lucide-react';
 import type { PrefillLead } from '@/lib/qualification';
 
 /**
@@ -62,6 +62,10 @@ const US_STATES = [
 
 // Statuses that use employer / pay details
 const EMPLOYED_STATUSES = ['Employed', 'Self Employed'];
+
+// Results-page call line
+const CALL_NOW_DISPLAY = '(949) 669-5546';
+const CALL_NOW_TEL = 'tel:+19496695546';
 
 // Loan amount slider bounds
 const LOAN_MIN = 1000;
@@ -153,18 +157,65 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
     }
   };
 
-  // ── Success state ──
+  // ── Success state: full-page loan results takeover ──
   if (status === 'success') {
     return (
-      <div className="space-y-4 p-8 text-center">
-        <CheckCircle2 className="mx-auto h-16 w-16 text-trust-green" />
-        <h2 className="font-display text-2xl font-black text-af-navy">
-          Thank You, {lead.firstName}!
-        </h2>
-        <p className="text-pv-muted">
-          Your information has been verified. A loan specialist will contact you
-          shortly with your personalized options.
-        </p>
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-pv-bg">
+        <div className="mx-auto max-w-2xl px-4 py-14 text-center">
+          <p className="font-display text-sm font-bold uppercase tracking-[0.25em] text-af-blue">
+            Request Received
+          </p>
+          <h1 className="mt-4 font-display text-4xl font-black leading-tight text-af-navy sm:text-5xl">
+            Good news, {lead.firstName} — based on your answers, you may qualify.
+          </h1>
+          <p className="mx-auto mt-5 max-w-xl text-pv-muted">
+            A loan specialist can review your request, walk you through the loan
+            options and rates available to you, and answer your questions. No
+            obligation — checking your options will not affect your credit score.
+          </p>
+
+          <div className="mt-7 inline-block rounded-full bg-af-blue-ice px-6 py-2.5 font-display font-bold text-af-navy">
+            Pre-Qualified for:{' '}
+            <span className="text-af-blue">{fmtUSD(Number(form.loanAmount))}</span>
+          </div>
+
+          <a
+            href={CALL_NOW_TEL}
+            className="mt-6 flex w-full items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-af-blue to-indigo-600 py-5 font-display text-xl font-bold text-white shadow-lg transition-opacity hover:opacity-90 sm:text-2xl"
+          >
+            <Phone className="h-6 w-6" fill="currentColor" />
+            Call Now — {CALL_NOW_DISPLAY}
+          </a>
+          <p className="mt-3 text-sm text-pv-muted">
+            The consultation is free. All rates, terms, and fees are fully disclosed
+            before you accept any loan.
+          </p>
+
+          <div className="mt-10 grid gap-4 text-left sm:grid-cols-2">
+            <div className="rounded-2xl bg-af-blue-soft p-6">
+              <h3 className="font-display font-bold text-af-navy">
+                Have this ready when you call
+              </h3>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-pv-text">
+                <li>The balances you want to consolidate or pay off</li>
+                <li>Creditor or lender names</li>
+                <li>Your approximate monthly income and major expenses</li>
+                <li>Your employer details and pay schedule</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border border-pv-line bg-white p-6">
+              <h3 className="font-display font-bold text-af-navy">
+                What happens on the call
+              </h3>
+              <ul className="mt-3 list-disc space-y-2 pl-5 text-pv-text">
+                <li>A loan specialist reviews your request and details</li>
+                <li>You hear the loan amounts, rates, and terms you may qualify for</li>
+                <li>You can ask questions before making any decision</li>
+                <li>You choose whether to move forward — no obligation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
