@@ -3,18 +3,17 @@
  *
  * Powers the adv1st.app/{unique_id} pre-filled landing pages.
  *
- * Flow:
- *   1. fetchLeadByUniqueId() — server-side prefill lookup (page.tsx)
- *   2. routeQualifiedLeadToBackends() — on submit, fans the answers out:
- *        • Supabase  → UPDATE the lead row matched on unique_id (source of truth)
- *        • GHL       → flat JSON to the inbound webhook (workflow maps fields,
- *                      adds "qualified" tag, moves pipeline stage)
- *      Salesforce/CallTools are updated downstream by the existing
- *      Supabase → SF/CallTools sync, keyed on the same unique_id.
+ * Data access uses two SECURITY DEFINER Postgres functions (created by
+ * supabase/qualification-migration.sql — RPC section):
+ *   • get_lead_prefill(p_id)          — returns ONE lead's prefill fields by exact ID
+ *   • update_lead_qualification(...)  — updates ONE lead's qualification fields by exact ID
+ * This means the anon key is sufficient even with RLS enabled, and the key
+ * can never enumerate or bulk-read the leads table.
  *
- * Credentials come from backendconnect.ts if filled, else from env
- * (SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY / SUPABASE_ANON_KEY /
- *  GHL_QUALIFY_WEBHOOK_URL or GHL_WEBHOOK_URL). All server-side only.
+ * On submit the answers also fan out to GHL via inbound webhook
+ * (GHL_QUALIFY_WEBHOOK_URL or GHL_WEBHOOK_URL). Salesforce/CallTools are
+ * updated downstream by the existing Supabase → SF/CallTools sync, keyed on
+ * the same unique_id. All credentials are server-side only.
  */
 
 import { BackendResult } from './leadTypes';
@@ -29,7 +28,7 @@ export function isValidUniqueId(id: string): boolean {
   return UNIQUE_ID_REGEX.test(id);
 }
 
-// ─── Types ───────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────
 
 /** What the landing page needs to prefill the form. */
 export interface PrefillLead {
@@ -69,17 +68,18 @@ export interface QualificationSubmission {
   ipAddress: string;
 }
 
-// ─── Credentials ─────────────────────────────────────────────────
+// ─── Credentials ───────────────────────────────────────────────
 
 function supabaseCreds() {
   const url = backendConfig.supabase.url || process.env.SUPABASE_URL || '';
-  // Service role preferred for reads (bypasses RLS); anon works if RLS allows.
+  // Service role preferred when present; the anon key is sufficient because
+  // data access goes through SECURITY DEFINER RPCs.
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
     backendConfig.supabase.anonKey ||
     process.env.SUPABASE_ANON_KEY ||
     '';
-  return { url, key, table: backendConfig.supabase.tableName || 'leads' };
+  return { url, key };
 }
 
 function ghlWebhookUrl(): string {
@@ -92,32 +92,35 @@ function ghlWebhookUrl(): string {
   );
 }
 
-// ─── Prefill lookup (server-side only) ───────────────────────────
-
-const PREFILL_COLUMNS =
-  'unique_id,first_name,last_name,full_name,phone,email,loan_amount,address_line1,address_line2,city,state,zip_code';
+// ─── Prefill lookup (server-side only, via RPC) ───────────────
 
 export async function fetchLeadByUniqueId(id: string): Promise<PrefillLead | null> {
   if (!isValidUniqueId(id)) return null;
 
-  const { url, key, table } = supabaseCreds();
+  const { url, key } = supabaseCreds();
   if (!url || !key) {
     console.error('[qualification] Supabase credentials missing — cannot prefill');
     return null;
   }
 
   try {
-    const res = await fetch(
-      `${url}/rest/v1/${table}?unique_id=eq.${encodeURIComponent(id)}&select=${PREFILL_COLUMNS}&limit=1`,
-      {
-        headers: { apikey: key, Authorization: `Bearer ${key}` },
-        cache: 'no-store',
-      }
-    );
-    if (!res.ok) return null;
+    const res = await fetch(`${url}/rest/v1/rpc/get_lead_prefill`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+      },
+      body: JSON.stringify({ p_id: id }),
+      cache: 'no-store',
+    });
+    if (!res.ok) {
+      console.error('[qualification] Prefill RPC failed:', res.status, await res.text());
+      return null;
+    }
 
     const rows = (await res.json()) as Record<string, unknown>[];
-    if (!rows.length) return null;
+    if (!Array.isArray(rows) || !rows.length) return null;
     const r = rows[0];
 
     // Derive first/last from full_name when split columns are empty.
@@ -148,50 +151,48 @@ export async function fetchLeadByUniqueId(id: string): Promise<PrefillLead | nul
 // ─── Submission fan-out ──────────────────────────────────────────
 
 async function updateSupabase(sub: QualificationSubmission): Promise<BackendResult> {
-  const { url, key, table } = supabaseCreds();
+  const { url, key } = supabaseCreds();
   if (!url || !key) {
     return { backend: 'supabase', success: false, message: 'Skipped — missing credentials' };
   }
 
-  const payload = {
-    phone: sub.phone,
-    email: sub.email,
-    loan_purpose: sub.loanPurpose,
-    loan_amount: sub.loanAmount,
-    rent_or_own: sub.rentOrOwn,
-    monthly_rent: sub.monthlyRent,
-    time_at_residency: sub.timeAtResidency,
-    annual_income: sub.annualIncome,
-    employment_status: sub.employmentStatus,
-    employer_name: sub.employerName,
-    pay_frequency: sub.payFrequency,
-    time_employed: sub.timeEmployed,
-    address_line1: sub.addressLine1,
-    address_line2: sub.addressLine2,
-    city: sub.city,
-    state: sub.state,
-    zip_code: sub.zipCode,
-    qualified_at: new Date().toISOString(),
-    qualification_ip: sub.ipAddress,
-  };
-
   try {
-    const res = await fetch(
-      `${url}/rest/v1/${table}?unique_id=eq.${encodeURIComponent(sub.uniqueId)}`,
-      {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          apikey: key,
-          Authorization: `Bearer ${key}`,
-          Prefer: 'return=minimal',
-        },
-        body: JSON.stringify(payload),
-      }
-    );
+    const res = await fetch(`${url}/rest/v1/rpc/update_lead_qualification`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: key,
+        Authorization: `Bearer ${key}`,
+      },
+      body: JSON.stringify({
+        p_id: sub.uniqueId,
+        p_phone: sub.phone,
+        p_email: sub.email,
+        p_loan_purpose: sub.loanPurpose,
+        p_loan_amount: sub.loanAmount,
+        p_rent_or_own: sub.rentOrOwn,
+        p_monthly_rent: sub.monthlyRent,
+        p_time_at_residency: sub.timeAtResidency,
+        p_annual_income: sub.annualIncome,
+        p_employment_status: sub.employmentStatus,
+        p_employer_name: sub.employerName,
+        p_pay_frequency: sub.payFrequency,
+        p_time_employed: sub.timeEmployed,
+        p_address_line1: sub.addressLine1,
+        p_address_line2: sub.addressLine2,
+        p_city: sub.city,
+        p_state: sub.state,
+        p_zip_code: sub.zipCode,
+        p_ip: sub.ipAddress,
+      }),
+    });
     if (!res.ok) {
       const text = await res.text();
       return { backend: 'supabase', success: false, message: `HTTP ${res.status}: ${text}` };
+    }
+    const found = (await res.json()) as boolean;
+    if (!found) {
+      return { backend: 'supabase', success: false, message: 'No lead matched unique_id' };
     }
     return { backend: 'supabase', success: true, message: 'Lead updated by unique_id' };
   } catch (err) {
