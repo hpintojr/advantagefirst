@@ -48,9 +48,9 @@ export default async function LeadQualificationPage({
             <Image
               src="/images/DT_Logo_tight.png"
               alt="Advantage First Financial"
-              width={220}
-              height={48}
-              className="h-10 w-auto"
+              width={293}
+              height={64}
+              className="h-16 w-auto"
               priority
             />
             <a
