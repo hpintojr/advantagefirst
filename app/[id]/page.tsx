@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
+import Link from 'next/link';
 import { ShieldCheck, Star, BadgeCheck, Phone } from 'lucide-react';
 import QualificationForm from '@/components/QualificationForm';
-import QualificationDisclosures from '@/components/QualificationDisclosures';
 import { fetchLeadByUniqueId, isValidUniqueId } from '@/lib/qualification';
 
 /**
- * adv1st.app/{unique_id} — personalized pre-selection landing page.
- * Server component: looks the lead up by unique_id and prefills the form.
+ * adv1st.app/{short_code} — personalized pre-selection landing page.
+ * Server component: looks the lead up by short_code and prefills the form.
  * Invalid AND expired IDs both render the identical not-found page so
  * scanners can't tell a miss from an expired link.
  */
@@ -85,16 +85,13 @@ export default async function LeadQualificationPage({
         </h1>
         <p className="mt-3 text-pv-muted">
           You are <span className="font-bold text-af-navy">pre-selected</span> for a Debt
-          Consolidation Loan
-          {lead.loanAmount ? (
-            <>
-              {' '}
-              up to{' '}
-              <span className="font-bold text-af-blue">{fmtUSD(lead.loanAmount)}</span>
-            </>
-          ) : null}
-          .
+          Consolidation Loan{lead.loanAmount ? ' up to' : '.'}
         </p>
+        {lead.loanAmount ? (
+          <p className="mt-1 font-display text-5xl font-black tracking-tight text-af-blue">
+            {fmtUSD(lead.loanAmount)}
+          </p>
+        ) : null}
         <ul className="mx-auto mt-4 inline-flex flex-col gap-1.5 text-left text-sm text-pv-text">
           <li className="flex items-center gap-2">
             <BadgeCheck className="h-4 w-4 shrink-0 text-trust-green" />
@@ -125,8 +122,56 @@ export default async function LeadQualificationPage({
         </p>
       </section>
 
-      {/* ── FCRA prescreen + lending disclosures ── */}
-      <QualificationDisclosures />
+      {/* ── Brief disclosures + link to full page ── */}
+      <section className="mx-auto max-w-2xl border-t border-pv-line px-4 py-6 text-[11px] leading-relaxed text-pv-muted">
+        <p className="italic">
+          <strong>PRESCREEN &amp; OPT-OUT NOTICE:</strong> This
+          &ldquo;prescreened&rdquo; offer of credit is based on information in your
+          credit report indicating that you meet certain criteria. If you do not
+          want to receive prescreened offers of credit from this and other
+          companies, call the consumer reporting agencies toll-free at
+          1-888-5OPT-OUT (1-888-567-8688) or visit{' '}
+          <a
+            href="https://www.optoutprescreen.com"
+            className="underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            www.optoutprescreen.com
+          </a>
+          .
+        </p>
+        <p className="mt-2">
+          APRs through Advantage First Financial, LLC will be no greater than
+          35.99% with terms from 61 days to 180 months. Eligibility is not
+          guaranteed and is subject to credit and other conditions. Loans may be
+          funded by third-party lenders. Advantage First Financial, LLC is a Utah
+          licensed lender under the Utah Department of Financial Institutions.
+        </p>
+        <p className="mt-3 font-semibold">
+          <Link href="/disclosures" className="text-af-blue underline">
+            View Full Disclosures
+          </Link>
+          <span className="mx-2 font-normal">&bull;</span>
+          <a
+            href="https://www.advantagefirst.com/privacy"
+            className="text-af-blue underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Privacy Policy
+          </a>
+          <span className="mx-2 font-normal">&bull;</span>
+          <a
+            href="https://www.advantagefirst.com/terms-of-use"
+            className="text-af-blue underline"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Terms of Use
+          </a>
+        </p>
+      </section>
     </main>
   );
 }

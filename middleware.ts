@@ -22,8 +22,8 @@ const RESERVED = new Set([
 const isUniqueId = (pathname: string) =>
   UNIQUE_ID_PATH.test(pathname) && !RESERVED.has(pathname.slice(1).toLowerCase());
 
-// Paths the short domain must always allow (assets, api, next internals)
-const ALWAYS_ALLOW = /^\/(api|_next|favicon\.ico|robots\.txt|images|fonts)/;
+// Paths the short domain must always allow (assets, api, disclosures, internals)
+const ALWAYS_ALLOW = /^\/(api|_next|favicon\.ico|robots\.txt|images|fonts|disclosures)/;
 
 const MAIN_SITE = 'https://advantagefirst.com';
 const SHORT_HOSTS = ['adv1st.app', 'www.adv1st.app'];
