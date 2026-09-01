@@ -1,11 +1,12 @@
 /**
  * Lead Qualification — types, Supabase lookup, decline rules, and backend fan-out
  *
- * Powers the adv1st.app/{unique_id} pre-filled landing pages.
+ * Powers the adv1st.app/{short_code} pre-filled landing pages.
+ * The lead's ID lives in Supabase leads.short_code and GHL contact.short_code.
  *
  * Data access uses two SECURITY DEFINER Postgres functions:
- *   • get_lead_prefill(p_id)          — one lead's prefill fields by exact ID
- *   • update_lead_qualification(...)  — one lead's qualification fields by exact ID
+ *   • get_lead_prefill(p_id)          — one lead's prefill fields by exact short_code
+ *   • update_lead_qualification(...)  — one lead's qualification fields by exact short_code
  * The anon key is sufficient even with RLS enabled and can never enumerate
  * or bulk-read the leads table.
  *
@@ -17,7 +18,7 @@
 import { BackendResult } from './leadTypes';
 import { backendConfig } from './backendconnect';
 
-// ─── Unique ID rules (must match middleware.ts and the Supabase generator) ───
+// ─── Short code rules (must match middleware.ts and the Supabase generator) ───
 
 /** 5 chars, alphanumeric, at least one digit. e.g. Kx9mQ */
 export const UNIQUE_ID_REGEX = /^(?=[a-zA-Z]*\d)[a-zA-Z0-9]{5}$/;
@@ -162,7 +163,7 @@ export async function fetchLeadByUniqueId(id: string): Promise<PrefillLead | nul
       String(r.last_name ?? '') || full.split(' ').slice(1).join(' ') || '';
 
     return {
-      uniqueId: String(r.unique_id ?? id),
+      uniqueId: String(r.short_code ?? id),
       firstName,
       lastName,
       phone: String(r.phone ?? ''),
@@ -226,9 +227,9 @@ async function updateSupabase(sub: QualificationSubmission): Promise<BackendResu
     }
     const found = (await res.json()) as boolean;
     if (!found) {
-      return { backend: 'supabase', success: false, message: 'No lead matched unique_id' };
+      return { backend: 'supabase', success: false, message: 'No lead matched short_code' };
     }
-    return { backend: 'supabase', success: true, message: 'Lead updated by unique_id' };
+    return { backend: 'supabase', success: true, message: 'Lead updated by short_code' };
   } catch (err) {
     return {
       backend: 'supabase',
@@ -250,7 +251,7 @@ async function sendToGhl(sub: QualificationSubmission): Promise<BackendResult> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         type: 'lead_qualification',
-        unique_id: sub.uniqueId,
+        short_code: sub.uniqueId,
         phone: sub.phone,
         email: sub.email,
         loan_purpose: sub.loanPurpose,
@@ -299,7 +300,7 @@ async function sendToGhlApi(sub: QualificationSubmission): Promise<BackendResult
   }
 
   const customFields = [
-    { key: 'unique_id', field_value: sub.uniqueId },
+    { key: 'short_code', field_value: sub.uniqueId },
     { key: 'loan_purpose', field_value: sub.loanPurpose },
     { key: 'loan_amount', field_value: String(sub.loanAmount) },
     { key: 'rent_or_own', field_value: sub.rentOrOwn },
