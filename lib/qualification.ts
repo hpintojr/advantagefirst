@@ -1,19 +1,17 @@
 /**
- * Lead Qualification — types, Supabase lookup, and backend fan-out
+ * Lead Qualification — types, Supabase lookup, decline rules, and backend fan-out
  *
  * Powers the adv1st.app/{unique_id} pre-filled landing pages.
  *
- * Data access uses two SECURITY DEFINER Postgres functions (created by
- * supabase/qualification-migration.sql — RPC section):
- *   • get_lead_prefill(p_id)          — returns ONE lead's prefill fields by exact ID
- *   • update_lead_qualification(...)  — updates ONE lead's qualification fields by exact ID
- * This means the anon key is sufficient even with RLS enabled, and the key
- * can never enumerate or bulk-read the leads table.
+ * Data access uses two SECURITY DEFINER Postgres functions:
+ *   • get_lead_prefill(p_id)          — one lead's prefill fields by exact ID
+ *   • update_lead_qualification(...)  — one lead's qualification fields by exact ID
+ * The anon key is sufficient even with RLS enabled and can never enumerate
+ * or bulk-read the leads table.
  *
- * On submit the answers also fan out to GHL via inbound webhook
- * (GHL_QUALIFY_WEBHOOK_URL or GHL_WEBHOOK_URL). Salesforce/CallTools are
- * updated downstream by the existing Supabase → SF/CallTools sync, keyed on
- * the same unique_id. All credentials are server-side only.
+ * Decline rules (evaluateDecline) are the single source of truth, applied
+ * server-side in /api/qualify-lead. All data is collected and stored either
+ * way; declined leads are tagged 'declined' in GHL.
  */
 
 import { BackendResult } from './leadTypes';
@@ -26,6 +24,33 @@ export const UNIQUE_ID_REGEX = /^(?=[a-zA-Z]*\d)[a-zA-Z0-9]{5}$/;
 
 export function isValidUniqueId(id: string): boolean {
   return UNIQUE_ID_REGEX.test(id);
+}
+
+// ─── Qualification rules (single source of truth) ────────────────
+
+/** Anything at or below $14,999 is auto-declined. */
+export const MIN_QUALIFYING_AMOUNT = 15000;
+
+/** States we service. Anything else (incl. CO, MN, OR, WA) is declined. */
+export const SERVICED_STATES = new Set([
+  'AL','AK','AZ','AR','CA','CT','DE','DC','FL','GA','HI','ID','IL','IN','IA',
+  'KS','KY','LA','ME','MD','MA','MI','MS','MO','MT','NE','NV','NH','NJ','NM',
+  'NY','NC','ND','OH','OK','PA','RI','SC','SD','TN','TX','UT','VT','VA','WV',
+  'WI','WY','PR',
+]);
+
+export type DeclineReason = 'state' | 'no_income' | 'amount' | null;
+
+/** Evaluated server-side in the API route; also used client-side for display. */
+export function evaluateDecline(input: {
+  loanAmount: number;
+  state: string;
+  annualIncome: number;
+}): DeclineReason {
+  if (!SERVICED_STATES.has(input.state)) return 'state';
+  if (!(input.annualIncome > 0)) return 'no_income';
+  if (input.loanAmount < MIN_QUALIFYING_AMOUNT) return 'amount';
+  return null;
 }
 
 // ─── Types ───────────────────────────────────────────────────
@@ -66,14 +91,16 @@ export interface QualificationSubmission {
   state: string;
   zipCode: string;
   ipAddress: string;
+  /** 'qualified' | 'declined' — computed server-side via evaluateDecline */
+  result: string;
+  /** '' when qualified */
+  declineReason: string;
 }
 
 // ─── Credentials ───────────────────────────────────────────────
 
 function supabaseCreds() {
   const url = backendConfig.supabase.url || process.env.SUPABASE_URL || '';
-  // Service role preferred when present; the anon key is sufficient because
-  // data access goes through SECURITY DEFINER RPCs.
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
     backendConfig.supabase.anonKey ||
@@ -83,7 +110,6 @@ function supabaseCreds() {
 }
 
 function ghlWebhookUrl(): string {
-  // Use a dedicated qualification webhook if configured, else the shared one.
   return (
     process.env.GHL_QUALIFY_WEBHOOK_URL ||
     backendConfig.ghlWebhook.webhookUrl ||
@@ -92,7 +118,7 @@ function ghlWebhookUrl(): string {
   );
 }
 
-// ─── Prefill lookup (server-side only, via RPC) ───────────────
+// ─── Prefill lookup (server-side only, via RPC) ──────────────────
 
 export async function fetchLeadByUniqueId(id: string): Promise<PrefillLead | null> {
   if (!isValidUniqueId(id)) return null;
@@ -123,7 +149,6 @@ export async function fetchLeadByUniqueId(id: string): Promise<PrefillLead | nul
     if (!Array.isArray(rows) || !rows.length) return null;
     const r = rows[0];
 
-    // Derive first/last from full_name when split columns are empty.
     const full = String(r.full_name ?? '').trim();
     const firstName = String(r.first_name ?? '') || full.split(' ')[0] || '';
     const lastName =
@@ -184,6 +209,8 @@ async function updateSupabase(sub: QualificationSubmission): Promise<BackendResu
         p_state: sub.state,
         p_zip_code: sub.zipCode,
         p_ip: sub.ipAddress,
+        p_result: sub.result,
+        p_decline_reason: sub.declineReason,
       }),
     });
     if (!res.ok) {
@@ -235,7 +262,9 @@ async function sendToGhl(sub: QualificationSubmission): Promise<BackendResult> {
         state: sub.state,
         zip_code: sub.zipCode,
         qualified_at: new Date().toISOString(),
-        tags: ['qualified'],
+        qualification_result: sub.result,
+        decline_reason: sub.declineReason,
+        tags: [sub.result === 'declined' ? 'declined' : 'qualified'],
       }),
     });
     if (!res.ok) {
