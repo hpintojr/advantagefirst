@@ -63,6 +63,19 @@ const US_STATES = [
 // Statuses that use employer / pay details
 const EMPLOYED_STATUSES = ['Employed', 'Self Employed'];
 
+// Loan amount slider bounds
+const LOAN_MIN = 1000;
+const LOAN_MAX = 100000;
+const LOAN_STEP = 500;
+const LOAN_DEFAULT = 25000;
+
+const fmtUSD = (n: number) =>
+  new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(n);
+
 // ─── Masking helpers (never render the full stored value) ────
 const maskPhone = (phone: string) => {
   const digits = phone.replace(/\D/g, '');
@@ -91,7 +104,9 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
     phone: lead.phone,
     email: lead.email,
     loanPurpose: '',
-    loanAmount: lead.loanAmount != null ? String(lead.loanAmount) : '',
+    loanAmount: String(
+      Math.min(LOAN_MAX, Math.max(LOAN_MIN, lead.loanAmount ?? LOAN_DEFAULT))
+    ),
     rentOrOwn: '',
     monthlyRent: '0',
     timeAtResidency: '',
@@ -263,21 +278,30 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
         </div>
 
         <div>
-          <label htmlFor="loanAmount" className={labelCls}>
-            Loan Amount
-          </label>
+          <div className="mb-1 flex items-baseline justify-between">
+            <label htmlFor="loanAmount" className={labelCls}>
+              Loan Amount
+            </label>
+            <span className="font-display text-xl font-black text-af-blue">
+              {fmtUSD(Number(form.loanAmount))}
+            </span>
+          </div>
           <input
             id="loanAmount"
-            type="number"
+            type="range"
             name="loanAmount"
             value={form.loanAmount}
             onChange={set}
-            min={1000}
-            step={500}
-            inputMode="numeric"
-            className={inputCls}
+            min={LOAN_MIN}
+            max={LOAN_MAX}
+            step={LOAN_STEP}
+            className="h-2 w-full cursor-pointer appearance-none rounded-full bg-pv-line accent-af-blue"
             required
           />
+          <div className="mt-1 flex justify-between text-xs text-pv-muted">
+            <span>{fmtUSD(LOAN_MIN)}</span>
+            <span>{fmtUSD(LOAN_MAX)}+</span>
+          </div>
         </div>
 
         <div className={`grid gap-4 ${isRenting ? 'grid-cols-2' : 'grid-cols-1'}`}>
