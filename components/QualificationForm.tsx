@@ -9,6 +9,9 @@ import type { PrefillLead } from '@/lib/qualification';
  * One question-card per screen, progress bar + time estimate,
  * conversational headlines, prefilled + masked contact info.
  *
+ * Decline rules are enforced server-side in /api/qualify-lead; this
+ * component just renders the declined page when the API says so.
+ *
  * EDIT QUESTIONS HERE: dropdown options live in the constants below,
  * mirroring the CRM picklists exactly so downstream mapping is 1:1.
  */
@@ -58,8 +61,11 @@ const US_STATES = [
   'AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA',
   'KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ',
   'NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT',
-  'VA','WA','WV','WI','WY','DC',
+  'VA','WA','WV','WI','WY','DC','PR',
 ];
+
+// Statuses that also need a monthly housing payment amount
+const HOUSING_PAYMENT_STATUSES = ['Rent', 'Homeowner'];
 
 const EMPLOYED_STATUSES = ['Employed', 'Self Employed'];
 
@@ -68,7 +74,7 @@ const CALL_NOW_DISPLAY = '(949) 669-5546';
 const CALL_NOW_TEL = 'tel:+19496695546';
 
 // Loan amount slider bounds
-const LOAN_MIN = 1000;
+const LOAN_MIN = 7500;
 const LOAN_MAX = 100000;
 const LOAN_STEP = 500;
 const LOAN_DEFAULT = 25000;
@@ -104,7 +110,13 @@ const fieldInput =
   'w-full bg-transparent pt-0.5 text-pv-text placeholder:text-pv-muted/50 focus:outline-none';
 const headlineCls = 'font-display text-2xl font-black leading-snug text-af-navy';
 
-type Status = 'idle' | 'submitting' | 'success' | 'error';
+type Status = 'idle' | 'submitting' | 'success' | 'declined' | 'error';
+
+const DECLINE_MESSAGES: Record<string, string> = {
+  state: "Unfortunately, we don't currently offer loans in your state.",
+  no_income: "We aren't able to offer a loan without an active source of income.",
+  amount: "We aren't able to offer a loan for the amount requested.",
+};
 
 export default function QualificationForm({ lead }: { lead: PrefillLead }) {
   const [form, setForm] = useState({
@@ -115,7 +127,7 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
       Math.min(LOAN_MAX, Math.max(LOAN_MIN, lead.loanAmount ?? LOAN_DEFAULT))
     ),
     rentOrOwn: '',
-    monthlyRent: '0',
+    monthlyRent: '',
     timeAtResidency: '',
     annualIncome: '',
     employmentStatus: '',
@@ -132,12 +144,13 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
   const [editingPhone, setEditingPhone] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
+  const [declineReason, setDeclineReason] = useState('');
 
   const set = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  const isRenting = form.rentOrOwn === 'Rent';
+  const needsHousingPayment = HOUSING_PAYMENT_STATUSES.includes(form.rentOrOwn);
   const isEmployed = EMPLOYED_STATUSES.includes(form.employmentStatus);
 
   const canContinue = (() => {
@@ -152,7 +165,7 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
         return Boolean(
           form.rentOrOwn &&
             form.timeAtResidency &&
-            (!isRenting || form.monthlyRent.trim() !== '')
+            (!needsHousingPayment || form.monthlyRent.trim() !== '')
         );
       case 4:
         return Boolean(
@@ -199,11 +212,53 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
           annualIncome: Number(form.annualIncome) || 0,
         }),
       });
-      setStatus(res.ok ? 'success' : 'error');
+      if (!res.ok) {
+        setStatus('error');
+        return;
+      }
+      const data = (await res.json()) as { result?: string; reason?: string };
+      if (data.result === 'declined') {
+        setDeclineReason(data.reason || '');
+        setStatus('declined');
+      } else {
+        setStatus('success');
+      }
     } catch {
       setStatus('error');
     }
   };
+
+  // ── Declined state: full-page takeover ──
+  if (status === 'declined') {
+    return (
+      <div className="fixed inset-0 z-50 overflow-y-auto bg-pv-bg">
+        <div className="mx-auto max-w-xl px-4 py-16 text-center">
+          <p className="font-display text-sm font-bold uppercase tracking-[0.25em] text-pv-muted">
+            Application Update
+          </p>
+          <h1 className="mt-4 font-display text-3xl font-black leading-tight text-af-navy sm:text-4xl">
+            We&apos;re sorry, {lead.firstName} — we can&apos;t offer you a loan at
+            this time.
+          </h1>
+          <p className="mx-auto mt-5 max-w-md text-pv-muted">
+            {DECLINE_MESSAGES[declineReason] ||
+              'Based on the information provided, we are unable to offer a loan at this time.'}
+          </p>
+          <p className="mx-auto mt-3 max-w-md text-sm text-pv-muted">
+            Your information has been received. If your situation changes, you are
+            welcome to check your options again — it will not affect your credit
+            score.
+          </p>
+          <a
+            href="https://www.advantagefirst.com"
+            className="mt-8 inline-block rounded-full bg-af-blue px-8 py-3 font-display font-bold text-white transition-colors hover:bg-af-blue-light"
+          >
+            Return to Advantage First
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   // ── Success state: full-page loan results takeover ──
   if (status === 'success') {
@@ -457,10 +512,12 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
                 ))}
               </select>
             </div>
-            {isRenting && (
+            {needsHousingPayment && (
               <div className={fieldWrap}>
                 <label htmlFor="monthlyRent" className={fieldLabel}>
-                  Monthly rent
+                  {form.rentOrOwn === 'Rent'
+                    ? 'Monthly rent'
+                    : 'Monthly housing payment'}
                 </label>
                 <input
                   id="monthlyRent"
@@ -470,6 +527,7 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
                   onChange={set}
                   min={0}
                   inputMode="numeric"
+                  placeholder="500"
                   className={fieldInput}
                 />
               </div>
