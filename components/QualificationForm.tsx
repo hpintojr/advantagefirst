@@ -149,6 +149,7 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
   const [step, setStep] = useState(0);
   const [editingPhone, setEditingPhone] = useState(false);
   const [editingEmail, setEditingEmail] = useState(false);
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
   const [declineReason, setDeclineReason] = useState('');
 
@@ -188,7 +189,8 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
           form.addressLine1.trim() &&
             form.city.trim() &&
             form.state &&
-            /^[0-9]{5}(-[0-9]{4})?$/.test(form.zipCode.trim())
+            /^[0-9]{5}(-[0-9]{4})?$/.test(form.zipCode.trim()) &&
+            consent
         );
       default:
         return false;
@@ -207,7 +209,13 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canContinue) return;
+    // Enter key on earlier steps must ADVANCE, never submit early —
+    // the address confirmation screen is required for every lead.
+    if (step < TOTAL_STEPS - 1) {
+      next();
+      return;
+    }
+    if (!canContinue || status === 'submitting') return;
     setStatus('submitting');
     try {
       const res = await fetch('/api/qualify-lead', {
@@ -219,6 +227,7 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
           loanAmount: Number(form.loanAmount) || 0,
           monthlyRent: Number(form.monthlyRent) || 0,
           annualIncome: Number(form.annualIncome) || 0,
+          tcpaConsent: consent,
         }),
       });
       if (!res.ok) {
@@ -665,7 +674,7 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
           </>
         )}
 
-        {/* ── Step 6: Address + submit ── */}
+        {/* ── Step 6: Address + consent + submit ── */}
         {step === 5 && (
           <>
             <h2 className={headlineCls}>Last step — confirm your address</h2>
@@ -749,38 +758,53 @@ export default function QualificationForm({ lead }: { lead: PrefillLead }) {
                 />
               </div>
             </div>
-            <p className="text-xs leading-relaxed text-pv-muted">
-              By submitting, you agree to our{' '}
-              <a
-                href="https://www.advantagefirst.com/privacy"
-                className="underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Privacy Policy
-              </a>{' '}
-              and{' '}
-              <a
-                href="https://www.advantagefirst.com/terms-of-use"
-                className="underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Terms of Use
-              </a>
-              , and consent to be contacted by Advantage First Financial at the
-              number provided, including by autodialed or prerecorded calls and
-              texts. Consent is not a condition of any purchase. See our{' '}
-              <a
-                href="https://www.advantagefirst.com/sms-terms"
-                className="underline"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                SMS Terms
-              </a>
-              .
-            </p>
+
+            {/* ── Required TCPA consent checkbox ── */}
+            <label
+              htmlFor="tcpaConsent"
+              className="flex cursor-pointer items-start gap-3 rounded-xl border border-pv-line bg-pv-surface p-4"
+            >
+              <input
+                id="tcpaConsent"
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                className="mt-0.5 h-5 w-5 shrink-0 cursor-pointer accent-af-blue"
+              />
+              <span className="text-xs leading-relaxed text-pv-muted">
+                I agree to the{' '}
+                <a
+                  href="https://www.advantagefirst.com/privacy"
+                  className="underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Privacy Policy
+                </a>{' '}
+                and{' '}
+                <a
+                  href="https://www.advantagefirst.com/terms-of-use"
+                  className="underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Terms of Use
+                </a>
+                , and I expressly consent to be contacted by Advantage First
+                Financial at the phone number provided, including by autodialed or
+                prerecorded calls and text messages. Consent is not a condition of
+                any purchase. Message and data rates may apply. See our{' '}
+                <a
+                  href="https://www.advantagefirst.com/sms-terms"
+                  className="underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  SMS Terms
+                </a>
+                .
+              </span>
+            </label>
           </>
         )}
 
