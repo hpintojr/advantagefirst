@@ -1,12 +1,11 @@
 /**
  * Lead Qualification — types, Supabase lookup, decline rules, and backend fan-out
  *
- * Powers the adv1st.app/{short_code} pre-filled landing pages.
- * The lead's ID lives in Supabase leads.short_code and GHL contact.short_code.
+ * Powers the adv1st.app/{unique_id} pre-filled landing pages.
  *
  * Data access uses two SECURITY DEFINER Postgres functions:
- *   • get_lead_prefill(p_id)          — one lead's prefill fields by exact short_code
- *   • update_lead_qualification(...)  — one lead's qualification fields by exact short_code
+ *   • get_lead_prefill(p_id)          — one lead's prefill fields by exact ID
+ *   • update_lead_qualification(...)  — one lead's qualification fields by exact ID
  * The anon key is sufficient even with RLS enabled and can never enumerate
  * or bulk-read the leads table.
  *
@@ -18,7 +17,7 @@
 import { BackendResult } from './leadTypes';
 import { backendConfig } from './backendconnect';
 
-// ─── Short code rules (must match middleware.ts) ──────────────────
+// ─── Unique ID rules (must match middleware.ts and the Supabase generator) ───
 
 /** 5 chars, alphanumeric (letters-only codes like JSYNB are valid). */
 export const UNIQUE_ID_REGEX = /^[a-zA-Z0-9]{5}$/;
@@ -59,7 +58,7 @@ export function evaluateDecline(input: {
   return null;
 }
 
-// ─── Types ───────────────────────────────────────────────────
+// ─── Types ────────────────────────────────────────────────
 
 /** What the landing page needs to prefill the form. */
 export interface PrefillLead {
@@ -103,7 +102,7 @@ export interface QualificationSubmission {
   declineReason: string;
 }
 
-// ─── Credentials ───────────────────────────────────────────────
+// ─── Credentials ─────────────────────────────────────────
 
 function supabaseCreds() {
   const url = backendConfig.supabase.url || process.env.SUPABASE_URL || '';
@@ -186,7 +185,7 @@ export async function fetchLeadByUniqueId(id: string): Promise<PrefillLead | nul
   }
 }
 
-// ─── Submission fan-out ──────────────────────────────────────────
+// ─── Submission fan-out ────────────────────────────────────
 
 async function updateSupabase(sub: QualificationSubmission): Promise<BackendResult> {
   const { url, key } = supabaseCreds();
@@ -232,9 +231,9 @@ async function updateSupabase(sub: QualificationSubmission): Promise<BackendResu
     }
     const found = (await res.json()) as boolean;
     if (!found) {
-      return { backend: 'supabase', success: false, message: 'No lead matched short_code' };
+      return { backend: 'supabase', success: false, message: 'No lead matched unique_id' };
     }
-    return { backend: 'supabase', success: true, message: 'Lead updated by short_code' };
+    return { backend: 'supabase', success: true, message: 'Lead updated by unique_id' };
   } catch (err) {
     return {
       backend: 'supabase',
@@ -337,12 +336,40 @@ async function sendToGhlApi(sub: QualificationSubmission): Promise<BackendResult
         state: sub.state,
         postalCode: sub.zipCode,
         customFields,
-        tags: [sub.result === 'declined' ? 'declined' : 'qualified'],
+        // NOTE: no `tags` here — upsert REPLACES the whole tag array and
+        // would wipe sync tags like master-db-sync. Tag is ADDED below.
       }),
     });
     if (!res.ok) {
       const text = await res.text();
       return { backend: 'ghl-api', success: false, message: `HTTP ${res.status}: ${text}` };
+    }
+
+    // Additively apply the result tag so existing tags are preserved.
+    const data = (await res.json()) as { contact?: { id?: string } };
+    const contactId = data.contact?.id;
+    if (contactId) {
+      const tagRes = await fetch(
+        `https://services.leadconnectorhq.com/contacts/${contactId}/tags`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${apiKey}`,
+            Version: '2021-07-28',
+          },
+          body: JSON.stringify({
+            tags: [sub.result === 'declined' ? 'declined' : 'qualified'],
+          }),
+        }
+      );
+      if (!tagRes.ok) {
+        return {
+          backend: 'ghl-api',
+          success: true,
+          message: `Contact upserted; tag add failed (HTTP ${tagRes.status})`,
+        };
+      }
     }
     return { backend: 'ghl-api', success: true, message: 'Contact upserted with qualification fields' };
   } catch (err) {
