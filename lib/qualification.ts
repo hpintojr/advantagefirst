@@ -381,6 +381,132 @@ async function sendToGhlApi(sub: QualificationSubmission): Promise<BackendResult
   }
 }
 
+/**
+ * Salesforce push via OAuth 2.0 Client Credentials flow.
+ * Upserts the Lead on the Short_Code__c external ID.
+ *
+ * IMPORTANT: several SF picklists store NUMERIC CODES, not labels
+ * (discovered from field metadata) — mapped below.
+ * Skipped gracefully unless SALESFORCE_CLIENT_ID, SALESFORCE_CLIENT_SECRET
+ * and SALESFORCE_INSTANCE_URL are set.
+ */
+const SF_EMPLOYMENT_STATUS: Record<string, string> = {
+  Employed: '1',
+  'Social Security': '2',
+  Pension: '3',
+  Disability: '4',
+  'Self Employed': '5',
+  Student: '6',
+  Unemployed: '7',
+};
+const SF_PAY_FREQUENCY: Record<string, string> = {
+  Weekly: '1',
+  'Bi-Weekly': '2',
+  Monthly: '4',
+  Other: '6',
+};
+const SF_RENT_OR_OWN: Record<string, string> = {
+  Homeowner: '1',
+  Rent: '2',
+  'Live with Family': '3',
+  Other: '4',
+};
+const SF_TIME_EMPLOYED: Record<string, string> = {
+  '3 months or less': '3',
+  'About 6 months': '6',
+  'About 1 year': '12',
+  '2 years or more': '24',
+};
+const SF_TIME_AT_RESIDENCY: Record<string, string> = {
+  '6 months or less': '6',
+  'About a year': '12',
+  'About 2 years': '24',
+  '3 years or more': '36',
+};
+
+async function sendToSalesforce(sub: QualificationSubmission): Promise<BackendResult> {
+  const clientId = process.env.SALESFORCE_CLIENT_ID || '';
+  const clientSecret = process.env.SALESFORCE_CLIENT_SECRET || '';
+  const instanceUrl = (process.env.SALESFORCE_INSTANCE_URL || '').replace(/\/$/, '');
+  if (!clientId || !clientSecret || !instanceUrl) {
+    return { backend: 'salesforce', success: false, message: 'Skipped — missing credentials' };
+  }
+
+  try {
+    const tokenRes = await fetch(`${instanceUrl}/services/oauth2/token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        grant_type: 'client_credentials',
+        client_id: clientId,
+        client_secret: clientSecret,
+      }),
+    });
+    if (!tokenRes.ok) {
+      return {
+        backend: 'salesforce',
+        success: false,
+        message: `Token HTTP ${tokenRes.status}: ${await tokenRes.text()}`,
+      };
+    }
+    const { access_token: accessToken } = (await tokenRes.json()) as {
+      access_token: string;
+    };
+
+    const fields: Record<string, unknown> = {
+      Phone: sub.phone,
+      Street: sub.addressLine2
+        ? `${sub.addressLine1}, ${sub.addressLine2}`
+        : sub.addressLine1,
+      City: sub.city,
+      State: sub.state,
+      PostalCode: sub.zipCode,
+      Loan_Amount__c: sub.loanAmount,
+      Annual_Income__c: sub.annualIncome,
+      Monthly_Rent__c: sub.monthlyRent,
+      Employer_Name__c: sub.employerName,
+    };
+    if (sub.email) fields.Email = sub.email;
+    const es = SF_EMPLOYMENT_STATUS[sub.employmentStatus];
+    if (es) fields.Employment_Status__c = es;
+    const pf = SF_PAY_FREQUENCY[sub.payFrequency];
+    if (pf) fields.Pay_Frequency__c = pf;
+    const ro = SF_RENT_OR_OWN[sub.rentOrOwn];
+    if (ro) fields.Rent_or_Own__c = ro;
+    const te = SF_TIME_EMPLOYED[sub.timeEmployed];
+    if (te) fields.How_long_have_you_been_employed__c = te;
+    const tr = SF_TIME_AT_RESIDENCY[sub.timeAtResidency];
+    if (tr) fields.How_long_have_you_been_at_your_residency__c = tr;
+
+    // Upsert on the Short_Code__c external ID — no duplicate leads.
+    const upsertRes = await fetch(
+      `${instanceUrl}/services/data/v62.0/sobjects/Lead/Short_Code__c/${encodeURIComponent(sub.uniqueId)}`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify(fields),
+      }
+    );
+    if (!upsertRes.ok) {
+      return {
+        backend: 'salesforce',
+        success: false,
+        message: `Upsert HTTP ${upsertRes.status}: ${await upsertRes.text()}`,
+      };
+    }
+    return { backend: 'salesforce', success: true, message: 'Lead upserted on Short_Code__c' };
+  } catch (err) {
+    return {
+      backend: 'salesforce',
+      success: false,
+      message: `Error: ${err instanceof Error ? err.message : 'Unknown'}`,
+    };
+  }
+}
+
 export async function routeQualifiedLeadToBackends(
   sub: QualificationSubmission
 ): Promise<BackendResult[]> {
@@ -388,6 +514,7 @@ export async function routeQualifiedLeadToBackends(
     updateSupabase(sub),
     sendToGhl(sub),
     sendToGhlApi(sub),
+    sendToSalesforce(sub),
   ]);
   return settled.map((r) =>
     r.status === 'fulfilled'
